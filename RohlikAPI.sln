@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{37D47E
 		.build\MSBuild.Community.Tasks.targets = .build\MSBuild.Community.Tasks.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RohlikAPITests", "RohlikAPITests\RohlikAPITests.csproj", "{A258046A-863D-4AF9-9A3E-308B2E9F8F0E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,6 +24,10 @@ Global
 		{AC2B765F-7351-4B4E-A289-BFC6E6BD314C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC2B765F-7351-4B4E-A289-BFC6E6BD314C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC2B765F-7351-4B4E-A289-BFC6E6BD314C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A258046A-863D-4AF9-9A3E-308B2E9F8F0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A258046A-863D-4AF9-9A3E-308B2E9F8F0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A258046A-863D-4AF9-9A3E-308B2E9F8F0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A258046A-863D-4AF9-9A3E-308B2E9F8F0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RohlikAPI
+namespace RohlikAPISharp
 {
     internal class PersistentSessionHttpClient
     {

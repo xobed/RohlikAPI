@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 
-namespace RohlikAPI
+namespace RohlikAPISharp
 {
     internal class Rohlikovac
     {
