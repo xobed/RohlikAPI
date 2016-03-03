@@ -53,12 +53,18 @@
   <ItemGroup>
     <Compile Include="PersistentSessionHttpClientTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RohlikovacTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RohlikAPI\RohlikAPI.csproj">
       <Project>{AC2B765F-7351-4B4E-A289-BFC6E6BD314C}</Project>
       <Name>RohlikAPI</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="loginPassword.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
