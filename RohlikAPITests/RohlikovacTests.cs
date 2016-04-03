@@ -8,7 +8,12 @@ namespace RohlikAPISharp.Tests
     {
         private string[] GetCredentials()
         {
-            var passwordString = File.ReadAllText("loginPassword.txt");
+            string filePath = @"..\..\..\loginPassword.txt";
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException("Test needs credentials. Create 'loginPassword.txt' in solution root directory. Enter username@email.com:yourPassword on first line.");
+            }
+            var passwordString = File.ReadAllText(filePath);
             return passwordString.Split(':');
         }
 
