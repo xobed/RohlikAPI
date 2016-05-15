@@ -5,40 +5,41 @@ namespace RohlikAPISharp
 {
     public class RohlikApi
     {
-        private readonly PersistentSessionHttpClient httpClient;
+        private PersistentSessionHttpClient httpClient;
 
-        public RohlikApi(string username, string password)
+        internal RohlikApi()
         {
-            httpClient = Login(username, password);
         }
 
-        private PersistentSessionHttpClient Login(string username, string password)
+        public RohlikApi(City city)
+        {
+            httpClient = SetCity(city);
+        }
+
+        internal void SetHttpClient(PersistentSessionHttpClient httpClientToSet)
+        {
+            httpClient = httpClientToSet;
+        }
+
+        private PersistentSessionHttpClient SetCity(City city)
         {
             var loginPostForm = new List<KeyValuePair<string, string>>
             {
-                new KeyValuePair<string, string>("do", "loginForm-submit"),
-                new KeyValuePair<string, string>("email", username),
-                new KeyValuePair<string, string>("password", password)
+                new KeyValuePair<string, string>("do", "addressPopup-form-submit"),
+                new KeyValuePair<string, string>("address", city.Address),
             };
 
-            const string rohlikLoginUrl = "https://www.rohlik.cz/uzivatel/prihlaseni";
+            string setCityUrl = "https://www.rohlik.cz/";
 
             var httpSessionClient = new PersistentSessionHttpClient();
 
-            var response = httpSessionClient.Post(rohlikLoginUrl, loginPostForm);
+            var response = httpSessionClient.Post(setCityUrl, loginPostForm);
             var responseContent = response.Content.ReadAsStringAsync().Result;
-            if (!responseContent.Contains("Můj účet"))
+            if (!responseContent.Contains(city.Address))
             {
-                throw new WebException($"Failed to login to Rohlik. Used email: {username}");
+                throw new WebException($"Failed to set address '{city.Address}' for Rohlik client");
             }
-
             return httpSessionClient;
-        }
-
-        public string RunRohlikovac()
-        {
-            var rohlikovac = new Rohlikovac(httpClient);
-            return rohlikovac.Run();
         }
     }
 }

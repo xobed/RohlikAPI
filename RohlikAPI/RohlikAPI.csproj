@@ -46,8 +46,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="City.cs" />
     <Compile Include="PersistentSessionHttpClient.cs" />
     <Compile Include="RohlikApi.cs" />
+    <Compile Include="AuthenticatedRohlikApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rohlikovac.cs" />
   </ItemGroup>

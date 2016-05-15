@@ -21,7 +21,7 @@ namespace RohlikAPISharp.Tests
         public void RunTest()
         {
             var login = GetCredentials();
-            var rohlikApi = new RohlikApi(login[0], login[1]);
+            var rohlikApi = new AuthenticatedRohlikApi(login[0], login[1]);
             var result = rohlikApi.RunRohlikovac();
             if (result.Contains("error"))
             {

@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="PersistentSessionHttpClientTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RohlikApiTests.cs" />
     <Compile Include="RohlikovacTests.cs" />
   </ItemGroup>
   <ItemGroup>
