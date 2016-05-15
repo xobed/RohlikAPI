@@ -18,6 +18,7 @@ namespace RohlikAPISharp.Tests
         }
 
         [TestMethod]
+        [Ignore]
         public void RunTest()
         {
             var login = GetCredentials();
