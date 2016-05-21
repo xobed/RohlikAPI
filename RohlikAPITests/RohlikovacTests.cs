@@ -1,7 +1,8 @@
 ﻿using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RohlikAPI;
 
-namespace RohlikAPISharp.Tests
+namespace RohlikAPITests
 {
     [TestClass]
     public class RohlikovacTests

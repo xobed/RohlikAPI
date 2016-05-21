@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 
-namespace RohlikAPISharp
+namespace RohlikAPI
 {
     public class AuthenticatedRohlikApi : RohlikApi
     {

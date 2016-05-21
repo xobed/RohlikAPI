@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using HtmlAgilityPack;
 
-namespace RohlikAPISharp
+namespace RohlikAPI
 {
     internal class Rohlikovac
     {

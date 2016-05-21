@@ -1,4 +1,4 @@
-﻿namespace RohlikAPISharp
+﻿namespace RohlikAPI
 {
     public class City
     {

@@ -1,12 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RohlikAPISharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using RohlikAPI;
 
-namespace RohlikAPISharp.Tests
+namespace RohlikAPITests
 {
     [TestClass()]
     public class PersistentSessionHttpClientTests
