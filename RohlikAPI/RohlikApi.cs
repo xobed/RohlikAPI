@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net;
+using RohlikAPI.Model;
 
 namespace RohlikAPI
 {
@@ -40,6 +41,41 @@ namespace RohlikAPI
                 throw new WebException($"Failed to set address '{city.Address}' for Rohlik client");
             }
             return httpSessionClient;
+        }
+
+        /// <summary>
+        /// <para>Get all listed Rohlik.cz products</para>
+        /// <para>Works for main categories as well as for sub-categories</para>
+        /// <para>Use second part of URL as category string. E.g. https://www.rohlik.cz/c133319-konzervovane-pastiky-a-maso => c133319-konzervovane-pastiky-a-maso</para>
+        /// </summary>
+        /// <param name="category">Product category - e.g. c75455-pecivo or cenove-trhaky</param>
+        /// <returns>Collection of products</returns>
+        public IEnumerable<Product> GetProducts(string category)
+        {
+            var products = new Products(httpClient);
+            return products.Get(category);
+        }
+
+        /// <summary>
+        ///     Get all products on https://www.rohlik.cz/last-minute
+        /// </summary>
+        /// <returns>Collection of all 'Last minute' products</returns>
+        public IEnumerable<Product> GetLastMinute()
+        {
+            const string lastMinuteCategory = "last-minute";
+            var products = new Products(httpClient);
+            return products.Get(lastMinuteCategory);
+        }
+
+        /// <summary>
+        ///     Gets all products on https://www.rohlik.cz/cenove-trhaky
+        /// </summary>
+        /// <returns>Collection of all 'Cenove trhaky' products</returns>
+        public IEnumerable<Product> GetCenoveTrhaky()
+        {
+            const string cenoveTrhakyCategory = "cenove-trhaky";
+            var products = new Products(httpClient);
+            return products.Get(cenoveTrhakyCategory);
         }
     }
 }

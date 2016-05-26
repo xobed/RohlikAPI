@@ -1,6 +1,10 @@
 API for www.rohlik.cz
 
-Also available on Nuget:
+Available on Nuget:
 https://www.nuget.org/packages/RohlikAPI/
 
-Currently only functionality is to roll credits on [Rohlikovac](https://www.rohlik.cz/stranka/rohlikovac)
+###Supported actions  
+GetCenoveTrhaky  
+GetLastMinute  
+GetProducts(category)  
+[RunRohlikovac](https://www.rohlik.cz/stranka/rohlikovac) - requires authentication  

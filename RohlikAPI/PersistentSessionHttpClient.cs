@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 
 namespace RohlikAPI
 {
-    internal class PersistentSessionHttpClient
+    public class PersistentSessionHttpClient
     {
         private readonly CookieContainer cookieContainer;
         private readonly HttpClient httpClient;
@@ -21,6 +22,20 @@ namespace RohlikAPI
         {
             var response = httpClient.GetStringAsync(url).Result;
             return response;
+        }
+
+        public string Get(HttpRequestMessage requestMessage, params KeyValuePair<string,string>[] urlParameters)
+        {
+            var query = HttpUtility.ParseQueryString(string.Empty);
+            foreach (var parameter in urlParameters)
+            {
+                query[parameter.Key] = parameter.Value;
+            }
+
+            string urlWithParameters = $"{requestMessage.RequestUri}?{query}";
+            requestMessage.RequestUri = new Uri(urlWithParameters);
+            var result = httpClient.SendAsync(requestMessage).Result.Content.ReadAsStringAsync().Result;
+            return result;
         }
 
         public HttpResponseMessage Post(string url, IEnumerable<KeyValuePair<string, string>> parameters)
