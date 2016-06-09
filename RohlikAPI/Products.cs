@@ -47,8 +47,13 @@ namespace RohlikAPI
             }
             var product = new Product();
 
-            var name = productNode.SelectSingleNode("*/h3/a").InnerText;
-            product.Name = name;
+            var aNode = productNode.SelectSingleNode("*/h3/a");
+            
+            product.Name = aNode.InnerText;
+
+            const string rohlikUrl = "https://rohlik.cz";
+            product.ProductUrl = $"{rohlikUrl}{aNode.Attributes["href"].Value}";
+
             var priceNode = productNode.SelectSingleNode("*/div/h6/strong");
             product.Price = ParsePrice(priceNode);
 
@@ -107,13 +112,13 @@ namespace RohlikAPI
 
             var page = 0;
             var response = GetProductsForPage(category, page);
-            allProductsString += CleanProductResults(response.snippets.snippetProducts);
+            allProductsString += CleanProductResults(response.Snippets.snippetProducts);
 
-            while (response.snippets.snippetPaginatorLoadMore != string.Empty)
+            while (response.Snippets.snippetPaginatorLoadMore != string.Empty)
             {
                 page++;
                 response = GetProductsForPage(category, page);
-                allProductsString += CleanProductResults(response.snippets.snippetProducts);
+                allProductsString += CleanProductResults(response.Snippets.snippetProducts);
             }
 
             return allProductsString;

@@ -13,5 +13,6 @@ namespace RohlikAPI.Model
         public bool IsDiscounted { get; set; }
         public double? OriginalPrice { get; set; }
         public DateTime? DiscountedUntil { get; set; }
+        public string ProductUrl { get; set; }
     }
 }

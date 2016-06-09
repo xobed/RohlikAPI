@@ -24,6 +24,7 @@ namespace RohlikAPITests
             Assert.IsTrue(products.All(p => p.IsDiscounted));
             Assert.IsTrue(products.All(p => p.DiscountedUntil != null));
             Assert.IsTrue(products.All(p => p.OriginalPrice != null));
+            Assert.IsFalse(products.All(p => string.IsNullOrEmpty(p.ProductUrl)));
         }
 
         [TestMethod]
@@ -51,6 +52,7 @@ namespace RohlikAPITests
             Assert.IsTrue(anyNonDiscountedProduct.OriginalPrice == null);
             Assert.IsTrue(anyNonDiscountedProduct.Price > 0);
             Assert.IsTrue(anyNonDiscountedProduct.Name != null);
+            Assert.IsFalse(products.All(p => string.IsNullOrEmpty(anyNonDiscountedProduct.ProductUrl)));
         }
 
         [TestMethod]

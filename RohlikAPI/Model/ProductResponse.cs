@@ -2,7 +2,7 @@
 {
     public class ProductResponse
     {
-        public State state { get; set; }
-        public Snippets snippets { get; set; }
+        public State State { get; set; }
+        public Snippets Snippets { get; set; }
     }
 }
