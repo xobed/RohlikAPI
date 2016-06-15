@@ -19,9 +19,8 @@ namespace RohlikAPITests
 
         private void VerifyDiscountedProducts(List<Product> products)
         {
-            if (products == null) throw new ArgumentNullException(nameof(products));
-            Assert.IsTrue(products.Any());
-            Assert.IsTrue(products.All(p => p.IsDiscounted));
+            Assert.IsTrue(products.Any(), "Failed to get any products");
+            Assert.IsTrue(products.All(p => p.IsDiscounted), $"Found some products without discount: {string.Join(",",products.Where(p => !p.IsDiscounted).Select(p => p.Name).ToList())}");
             Assert.IsTrue(products.All(p => p.DiscountedUntil != null));
             Assert.IsTrue(products.All(p => p.OriginalPrice != null));
             Assert.IsFalse(products.All(p => string.IsNullOrEmpty(p.ProductUrl)));
@@ -59,7 +58,7 @@ namespace RohlikAPITests
         public void GetCerstvePecivo()
         {
             var api = new RohlikApi(City.Brno);
-            var result = api.GetProducts("c75455-pecivo").ToList();
+            var result = api.GetProducts("c300101000-pekarna-a-cukrarna").ToList();
             VerifyNonDiscountedProducts(result);
             
         }
@@ -68,7 +67,7 @@ namespace RohlikAPITests
         public void GetSubcategory()
         {
             var api = new RohlikApi(City.Brno);
-            var result = api.GetProducts("c133319-konzervovane-pastiky-a-maso").ToList();
+            var result = api.GetProducts("c300106206-bio-a-farmarske-konzervovane").ToList();
             VerifyNonDiscountedProducts(result);
         }
     }
