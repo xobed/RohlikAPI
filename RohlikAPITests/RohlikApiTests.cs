@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RohlikAPI;
@@ -20,7 +19,7 @@ namespace RohlikAPITests
         private void VerifyDiscountedProducts(List<Product> products)
         {
             Assert.IsTrue(products.Any(), "Failed to get any products");
-            Assert.IsTrue(products.All(p => p.IsDiscounted), $"Found some products without discount: {string.Join(",",products.Where(p => !p.IsDiscounted).Select(p => p.Name).ToList())}");
+            Assert.IsTrue(products.All(p => p.IsDiscounted), $"Found some products without discount: {string.Join(",", products.Where(p => !p.IsDiscounted).Select(p => p.Name).ToList())}");
             Assert.IsTrue(products.All(p => p.DiscountedUntil != null));
             Assert.IsTrue(products.All(p => p.OriginalPrice != null));
             Assert.IsFalse(products.All(p => string.IsNullOrEmpty(p.ProductUrl)));
@@ -32,7 +31,6 @@ namespace RohlikAPITests
             var api = new RohlikApi(City.Brno);
             var result = api.GetCenoveTrhaky().ToList();
             VerifyDiscountedProducts(result);
-            
         }
 
         [TestMethod]
@@ -55,12 +53,11 @@ namespace RohlikAPITests
         }
 
         [TestMethod]
-        public void GetCerstvePecivo()
+        public void GetMainCategory()
         {
             var api = new RohlikApi(City.Brno);
             var result = api.GetProducts("c300101000-pekarna-a-cukrarna").ToList();
             VerifyNonDiscountedProducts(result);
-            
         }
 
         [TestMethod]

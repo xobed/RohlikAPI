@@ -32,7 +32,7 @@ namespace RohlikAPI
 
         private IEnumerable<Product> ParseProducts(HtmlDocument document)
         {
-            var productNodes = document.DocumentNode.SelectNodes(@"//*[@class='productContainerWrap']");
+            var productNodes = document.DocumentNode.SelectNodes(@"//*[@class='productGridWrapper']/div[contains(@class,'baseProduct')]//div[@class='productContainerWrap']");
             var parsedProducts = productNodes.Select(GetProductFromNode).ToList();
             parsedProducts.RemoveAll(p => p == null);
             return parsedProducts;
