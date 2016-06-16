@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RohlikAPI;
@@ -16,40 +17,36 @@ namespace RohlikAPITests
             Assert.IsNotNull(new RohlikApi(City.Praha));
         }
 
+        private void VerifyProduct(Product product, bool isDiscounted)
+        {
+            Assert.IsNotNull(product.Name, "Product name was null");
+            Assert.IsNotNull(product.ProductUrl, $"Product {product.Name} does not have an url");
+            Assert.IsTrue(product.Price > 0, $"Product {product.Name} does not have price");
+
+            if (isDiscounted)
+            {
+                Assert.IsNotNull(product.DiscountedUntil, $"Discounted product {product.Name} does not have discounted until");
+                Assert.IsNotNull(product.OriginalPrice, $"Discounted product {product.Name} does not have original price");
+            }
+            else
+            {
+                Assert.IsNull(product.DiscountedUntil, $"NonDiscounted product {product.Name} has 'discounted until' {product.DiscountedUntil}. Expected null");
+                Assert.IsNull(product.OriginalPrice);
+            }
+        }
+
         private void VerifyDiscountedProducts(List<Product> products)
         {
             Assert.IsTrue(products.Any(), "Failed to get any products");
             Assert.IsTrue(products.All(p => p.IsDiscounted), $"Found some products without discount: {string.Join(",", products.Where(p => !p.IsDiscounted).Select(p => p.Name).ToList())}");
-            Assert.IsTrue(products.All(p => p.DiscountedUntil != null));
-            Assert.IsTrue(products.All(p => p.OriginalPrice != null));
-            Assert.IsFalse(products.All(p => string.IsNullOrEmpty(p.ProductUrl)));
-        }
-
-        [TestMethod]
-        public void GetCenoveTrhaky()
-        {
-            var api = new RohlikApi(City.Brno);
-            var result = api.GetCenoveTrhaky().ToList();
-            VerifyDiscountedProducts(result);
-        }
-
-        [TestMethod]
-        public void GetLastMinute()
-        {
-            var api = new RohlikApi(City.Brno);
-            var result = api.GetLastMinute().ToList();
-            VerifyDiscountedProducts(result);
+            products.ForEach(p => VerifyProduct(p, true));
         }
 
         private void VerifyNonDiscountedProducts(List<Product> products)
         {
-            Assert.IsTrue(products.Any());
-            var anyNonDiscountedProduct = products.First(p => !p.IsDiscounted);
-            Assert.IsTrue(anyNonDiscountedProduct.DiscountedUntil == null);
-            Assert.IsTrue(anyNonDiscountedProduct.OriginalPrice == null);
-            Assert.IsTrue(anyNonDiscountedProduct.Price > 0);
-            Assert.IsTrue(anyNonDiscountedProduct.Name != null);
-            Assert.IsFalse(products.All(p => string.IsNullOrEmpty(anyNonDiscountedProduct.ProductUrl)));
+            Assert.IsTrue(products.Any(), "Failed to get any products");
+            var nonDicountedProducts = products.Where(p => !p.IsDiscounted).ToList();
+            nonDicountedProducts.ForEach(p => VerifyProduct(p, false));
         }
 
         [TestMethod]
@@ -66,6 +63,22 @@ namespace RohlikAPITests
             var api = new RohlikApi(City.Brno);
             var result = api.GetProducts("c300106206-bio-a-farmarske-konzervovane").ToList();
             VerifyNonDiscountedProducts(result);
+        }
+
+        [TestMethod]
+        public void GetCenoveTrhaky()
+        {
+            var api = new RohlikApi(City.Brno);
+            var result = api.GetCenoveTrhaky().ToList();
+            VerifyDiscountedProducts(result);
+        }
+
+        [TestMethod]
+        public void GetLastMinute()
+        {
+            var api = new RohlikApi(City.Brno);
+            var result = api.GetLastMinute().ToList();
+            VerifyDiscountedProducts(result);
         }
     }
 }
