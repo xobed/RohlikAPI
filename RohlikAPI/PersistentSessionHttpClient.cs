@@ -44,10 +44,5 @@ namespace RohlikAPI
             var response = httpClient.PostAsync(url, content).Result;
             return response;
         }
-
-        public CookieCollection GetCurrentCookies(string domainUrl)
-        {
-            return cookieContainer.GetCookies(new Uri(domainUrl));
-        }
     }
 }

@@ -112,13 +112,13 @@ namespace RohlikAPI
 
             var page = 0;
             var response = GetProductsForPage(category, page);
-            allProductsString += CleanProductResults(response.Snippets.snippetProducts);
+            allProductsString += CleanProductResults(response.Snippets.SnippetProducts);
 
-            while (response.Snippets.snippetPaginatorLoadMore != string.Empty)
+            while (response.Snippets.SnippetPaginatorLoadMore != string.Empty)
             {
                 page++;
                 response = GetProductsForPage(category, page);
-                allProductsString += CleanProductResults(response.Snippets.snippetProducts);
+                allProductsString += CleanProductResults(response.Snippets.SnippetProducts);
             }
 
             return allProductsString;

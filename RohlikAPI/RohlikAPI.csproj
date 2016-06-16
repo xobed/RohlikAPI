@@ -54,7 +54,6 @@
     <Compile Include="Model\Product.cs" />
     <Compile Include="Model\ProductResponse.cs" />
     <Compile Include="Model\Snippets.cs" />
-    <Compile Include="Model\State.cs" />
     <Compile Include="PersistentSessionHttpClient.cs" />
     <Compile Include="Products.cs" />
     <Compile Include="RohlikApi.cs" />

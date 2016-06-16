@@ -5,15 +5,9 @@ namespace RohlikAPI.Model
     public class Snippets
     {
         [JsonProperty("snippet--products")]
-        public string snippetProducts { get; set; }
-
-        [JsonProperty("snippet--flashMessages")]
-        public string snippetFlashMessages { get; set; }
-
-        [JsonProperty("snippet--productPopup")]
-        public string snippetProductPopup { get; set; }
+        public string SnippetProducts { get; set; }
 
         [JsonProperty("snippet-paginator-loadMore")]
-        public string snippetPaginatorLoadMore { get; set; }
+        public string SnippetPaginatorLoadMore { get; set; }
     }
 }
