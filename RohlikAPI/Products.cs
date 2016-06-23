@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
@@ -103,7 +104,15 @@ namespace RohlikAPI
             var dateTimeString = dateTimeNode.InnerText;
             dateTimeString = dateTimeString.Replace("Do", "");
             dateTimeString = Regex.Replace(dateTimeString, @"\s", "");
-            return DateTime.Parse(dateTimeString);
+            try
+            {
+                var dateTime = DateTime.Parse(dateTimeString, CultureInfo.CurrentCulture);
+                return dateTime;
+            }
+            catch (FormatException ex)
+            {
+                throw new FormatException($"Failed to parse datetime string: {dateTimeString}. Culture was {CultureInfo.CurrentCulture}. Ex: {ex}");
+            }
         }
 
         private string GetAllProductsString(string category)
