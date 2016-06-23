@@ -106,12 +106,12 @@ namespace RohlikAPI
             dateTimeString = Regex.Replace(dateTimeString, @"\s", "");
             try
             {
-                var dateTime = DateTime.Parse(dateTimeString, CultureInfo.CurrentCulture);
+                var dateTime = DateTime.Parse(dateTimeString, new CultureInfo("cs-CZ"));
                 return dateTime;
             }
             catch (FormatException ex)
             {
-                throw new FormatException($"Failed to parse datetime string: {dateTimeString}. Culture was {CultureInfo.CurrentCulture}. Ex: {ex}");
+                throw new FormatException($"Failed to parse datetime string: {dateTimeString}. Ex: {ex}");
             }
         }
 
