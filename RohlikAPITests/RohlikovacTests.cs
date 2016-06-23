@@ -18,7 +18,7 @@ namespace RohlikAPITests
             return passwordString.Split(':');
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Authenticated")]
         public void RunTest()
         {
             var login = GetCredentials();
