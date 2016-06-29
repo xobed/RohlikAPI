@@ -10,9 +10,10 @@ using RohlikAPI.Model;
 
 namespace RohlikAPI
 {
-    public class Products
+    internal class Products
     {
         private const string BaseUrl = "https://www.rohlik.cz/";
+        private const string BaseSearchUrl = "https://www.rohlik.cz/hledat/";
         private readonly PersistentSessionHttpClient httpClient;
 
         internal Products(PersistentSessionHttpClient httpClient)
@@ -22,9 +23,20 @@ namespace RohlikAPI
 
         internal IEnumerable<Product> Get(string category)
         {
-            var allProductsString = GetAllProductsString(category);
+            var allProductsString = GetAllProductsString(category, BaseUrl);
+            return GetProductsFromHtmlString(allProductsString);
+        }
+
+        internal IEnumerable<Product> Search(string searchString)
+        {
+            var allProductsString = GetAllProductsString(searchString, BaseSearchUrl);
+            return GetProductsFromHtmlString(allProductsString);
+        }
+
+        private IEnumerable<Product> GetProductsFromHtmlString(string htmlString)
+        {
             var allProductsDocument = new HtmlDocument();
-            allProductsDocument.LoadHtml(allProductsString);
+            allProductsDocument.LoadHtml(htmlString);
 
             var parsedProducts = ParseProducts(allProductsDocument);
 
@@ -115,27 +127,27 @@ namespace RohlikAPI
             }
         }
 
-        private string GetAllProductsString(string category)
+        private string GetAllProductsString(string category, string baseUrl)
         {
             var allProductsString = string.Empty;
 
             var page = 0;
-            var response = GetProductsForPage(category, page);
+            var response = GetProductsForPage(category, page, baseUrl);
             allProductsString += CleanProductResults(response.Snippets.SnippetProducts);
 
             while (response.Snippets.SnippetPaginatorLoadMore != string.Empty)
             {
                 page++;
-                response = GetProductsForPage(category, page);
+                response = GetProductsForPage(category, page, baseUrl);
                 allProductsString += CleanProductResults(response.Snippets.SnippetProducts);
             }
 
             return allProductsString;
         }
 
-        private ProductResponse GetProductsForPage(string category, int page)
+        private ProductResponse GetProductsForPage(string category, int page, string baseUrl)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{BaseUrl}{category}");
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{baseUrl}{category}");
             request.Headers.Add("X-Requested-With", "XMLHttpRequest");
 
             var parameters = new List<KeyValuePair<string, string>>

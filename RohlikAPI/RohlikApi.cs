@@ -56,6 +56,12 @@ namespace RohlikAPI
             return products.Get(category);
         }
 
+        public IEnumerable<Product> SearchProducts(string searchString)
+        {
+            var products = new Products(httpClient);
+            return products.Search(searchString);
+        }
+
         /// <summary>
         ///     Get all products on https://www.rohlik.cz/last-minute
         /// </summary>
@@ -63,8 +69,7 @@ namespace RohlikAPI
         public IEnumerable<Product> GetLastMinute()
         {
             const string lastMinuteCategory = "last-minute";
-            var products = new Products(httpClient);
-            return products.Get(lastMinuteCategory);
+            return GetProducts(lastMinuteCategory);
         }
 
         /// <summary>
@@ -74,8 +79,7 @@ namespace RohlikAPI
         public IEnumerable<Product> GetCenoveTrhaky()
         {
             const string cenoveTrhakyCategory = "cenove-trhaky";
-            var products = new Products(httpClient);
-            return products.Get(cenoveTrhakyCategory);
+            return GetProducts(cenoveTrhakyCategory);
         }
     }
 }

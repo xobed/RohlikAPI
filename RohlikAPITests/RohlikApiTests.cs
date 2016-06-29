@@ -80,5 +80,13 @@ namespace RohlikAPITests
             var result = api.GetLastMinute().ToList();
             VerifyDiscountedProducts(result);
         }
+
+        [TestMethod()]
+        public void SearchProductsTest()
+        {
+            var api = new RohlikApi(City.Brno);
+            var result = api.SearchProducts("Nestle").ToList();
+            VerifyNonDiscountedProducts(result);
+        }
     }
 }

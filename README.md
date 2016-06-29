@@ -7,4 +7,5 @@ https://www.nuget.org/packages/RohlikAPI/
 GetCenoveTrhaky  
 GetLastMinute  
 GetProducts(category)  
+SearchProducts(searchString)  
 [RunRohlikovac](https://www.rohlik.cz/stranka/rohlikovac) - requires authentication  
