@@ -1,8 +1,8 @@
 using Newtonsoft.Json;
 
-namespace RohlikAPI.Model
+namespace RohlikAPI.Model.JsonDeserialization
 {
-    public class Snippets
+    public class ProductSnippets
     {
         [JsonProperty("snippet--products")]
         public string SnippetProducts { get; set; }

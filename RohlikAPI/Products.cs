@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using Newtonsoft.Json;
 using RohlikAPI.Model;
+using RohlikAPI.Model.JsonDeserialization;
 
 namespace RohlikAPI
 {
@@ -61,7 +62,7 @@ namespace RohlikAPI
             var product = new Product();
 
             var aNode = productNode.SelectSingleNode("*/h3/a");
-            
+
             product.Name = aNode.InnerText;
 
             const string rohlikUrl = "https://rohlik.cz";
@@ -111,7 +112,7 @@ namespace RohlikAPI
             }
         }
 
-        private DateTime GetDateUntilDiscounted(HtmlNode dateTimeNode)
+        private DateTime? GetDateUntilDiscounted(HtmlNode dateTimeNode)
         {
             var dateTimeString = dateTimeNode.InnerText;
             dateTimeString = dateTimeString.Replace("Do", "");
@@ -123,6 +124,11 @@ namespace RohlikAPI
             }
             catch (FormatException ex)
             {
+                // Some products are marked as discounted, but do not show discounted until
+                if (dateTimeString.Contains("Výhodnácena"))
+                {
+                    return null;
+                }
                 throw new FormatException($"Failed to parse datetime string: {dateTimeString}. Ex: {ex}");
             }
         }
@@ -133,13 +139,13 @@ namespace RohlikAPI
 
             var page = 0;
             var response = GetProductsForPage(category, page, baseUrl);
-            allProductsString += CleanProductResults(response.Snippets.SnippetProducts);
+            allProductsString += CleanProductResults(response.ProductSnippets.SnippetProducts);
 
-            while (response.Snippets.SnippetPaginatorLoadMore != string.Empty)
+            while (response.ProductSnippets.SnippetPaginatorLoadMore != string.Empty)
             {
                 page++;
                 response = GetProductsForPage(category, page, baseUrl);
-                allProductsString += CleanProductResults(response.Snippets.SnippetProducts);
+                allProductsString += CleanProductResults(response.ProductSnippets.SnippetProducts);
             }
 
             return allProductsString;
