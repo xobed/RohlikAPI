@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net;
+using RohlikAPI.Model;
 
 namespace RohlikAPI
 {
@@ -40,6 +41,12 @@ namespace RohlikAPI
         {
             var rohlikovac = new Rohlikovac(httpClient);
             return rohlikovac.Run();
+        }
+
+        public IEnumerable<Order> GetOrderHistory()
+        {
+            var orderHistory = new OrderHistory(httpClient);
+            return orderHistory.GetAllOrders();
         }
     }
 }

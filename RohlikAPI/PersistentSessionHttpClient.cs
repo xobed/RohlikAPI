@@ -8,13 +8,12 @@ namespace RohlikAPI
 {
     public class PersistentSessionHttpClient
     {
-        private readonly CookieContainer cookieContainer;
         private readonly HttpClient httpClient;
 
         public PersistentSessionHttpClient()
         {
-            cookieContainer = new CookieContainer();
-            var handler = new HttpClientHandler { CookieContainer = cookieContainer };
+            var cookieContainer = new CookieContainer();
+            var handler = new HttpClientHandler {CookieContainer = cookieContainer};
             httpClient = new HttpClient(handler);
         }
 
@@ -24,8 +23,19 @@ namespace RohlikAPI
             return response;
         }
 
-        public string Get(HttpRequestMessage requestMessage, params KeyValuePair<string,string>[] urlParameters)
+        public string Get(HttpRequestMessage requestMessage)
         {
+            var result = httpClient.SendAsync(requestMessage).Result.Content.ReadAsStringAsync().Result;
+            return result;
+        }
+
+        public string Get(HttpRequestMessage requestMessage, params KeyValuePair<string, string>[] urlParameters)
+        {
+            if (urlParameters == null || urlParameters.Length == 0)
+            {
+                throw new ArgumentException(nameof(urlParameters));
+            }
+
             var query = HttpUtility.ParseQueryString(string.Empty);
             foreach (var parameter in urlParameters)
             {
@@ -34,8 +44,7 @@ namespace RohlikAPI
 
             string urlWithParameters = $"{requestMessage.RequestUri}?{query}";
             requestMessage.RequestUri = new Uri(urlWithParameters);
-            var result = httpClient.SendAsync(requestMessage).Result.Content.ReadAsStringAsync().Result;
-            return result;
+            return Get(requestMessage);
         }
 
         public HttpResponseMessage Post(string url, IEnumerable<KeyValuePair<string, string>> parameters)
