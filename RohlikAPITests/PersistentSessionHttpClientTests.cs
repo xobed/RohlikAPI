@@ -3,7 +3,7 @@ using RohlikAPI;
 
 namespace RohlikAPITests
 {
-    [TestClass()]
+    [TestClass]
     public class PersistentSessionHttpClientTests
     {
         [TestMethod]

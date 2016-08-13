@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RohlikAPI;
@@ -81,7 +80,7 @@ namespace RohlikAPITests
             VerifyDiscountedProducts(result);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void SearchProductsTest()
         {
             var api = new RohlikApi(City.Brno);

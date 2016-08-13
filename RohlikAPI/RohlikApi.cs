@@ -27,10 +27,10 @@ namespace RohlikAPI
             var loginPostForm = new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>("do", "addressPopup-form-submit"),
-                new KeyValuePair<string, string>("address", city.Address),
+                new KeyValuePair<string, string>("address", city.Address)
             };
 
-            string setCityUrl = "https://www.rohlik.cz/";
+            var setCityUrl = "https://www.rohlik.cz/";
 
             var httpSessionClient = new PersistentSessionHttpClient();
 
@@ -44,9 +44,12 @@ namespace RohlikAPI
         }
 
         /// <summary>
-        /// <para>Get all listed Rohlik.cz products</para>
-        /// <para>Works for main categories as well as for sub-categories</para>
-        /// <para>Use second part of URL as category string. E.g. https://www.rohlik.cz/c133319-konzervovane-pastiky-a-maso => c133319-konzervovane-pastiky-a-maso</para>
+        ///     <para>Get all listed Rohlik.cz products</para>
+        ///     <para>Works for main categories as well as for sub-categories</para>
+        ///     <para>
+        ///         Use second part of URL as category string. E.g. https://www.rohlik.cz/c133319-konzervovane-pastiky-a-maso =>
+        ///         c133319-konzervovane-pastiky-a-maso
+        ///     </para>
         /// </summary>
         /// <param name="category">Product category - e.g. c75455-pecivo or cenove-trhaky</param>
         /// <returns>Collection of products</returns>

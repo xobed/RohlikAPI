@@ -29,7 +29,7 @@ namespace RohlikAPI
             resultString = HttpUtility.HtmlDecode(resultString);
 
             // Replace any newlines, tabs and spaces with space
-            resultString = resultString.Replace("\n", " ").Replace("\t", " ").Replace("<br>"," ");
+            resultString = resultString.Replace("\n", " ").Replace("\t", " ").Replace("<br>", " ");
             // Trim any other HTML expressions
             resultString = Regex.Replace(resultString, @"(<.*?>)|(&.*?;)", "");
             // Make any doublespaces single space
