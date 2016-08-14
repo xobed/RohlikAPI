@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using RohlikAPI.Model;
 
@@ -45,8 +46,13 @@ namespace RohlikAPI
 
         public IEnumerable<Order> GetOrderHistory()
         {
+            return GetOrderHistory(DateTime.MinValue);
+        }
+
+        public IEnumerable<Order> GetOrderHistory(DateTime getOrdersSince)
+        {
             var orderHistory = new OrderHistory(httpClient);
-            return orderHistory.GetAllOrders();
+            return orderHistory.GetOrdersSinceDate(getOrdersSince);
         }
     }
 }

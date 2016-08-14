@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -36,27 +37,41 @@ namespace RohlikAPITests
             return passwordString.Split(':');
         }
 
-        private void CheckOrderHistoryItem(Order order)
+        private void CheckOrderHistoryItem(Order order, DateTime timeSince)
         {
             Assert.IsTrue(order.Id > 0);
             Assert.IsTrue(order.Price > 0);
             Assert.IsNotNull(order.Date);
             Assert.IsTrue(!string.IsNullOrEmpty(order.PaymentMethod));
+            Assert.IsTrue(order.Date > timeSince);
         }
 
         [TestMethod, TestCategory("Authenticated")]
-        public void OrderHistory_RetrievesHistory()
+        public void OrderHistory_RetrievesAllHistory()
         {
             var login = GetCredentials();
             var rohlikApi = new AuthenticatedRohlikApi(login[0], login[1]);
             var result = rohlikApi.GetOrderHistory().ToList();
             Assert.IsTrue(result.Any(), "Failed to get any orders");
 
-            result.ForEach(CheckOrderHistoryItem);
+            result.ForEach(order => CheckOrderHistoryItem(order, DateTime.MinValue));
         }
 
         [TestMethod, TestCategory("Authenticated")]
-        public void RunTest()
+        public void OrderHistory_RetrievesHistorySinceDate()
+        {
+            var login = GetCredentials();
+            var rohlikApi = new AuthenticatedRohlikApi(login[0], login[1]);
+
+            var timeBeforeLast3Months = DateTime.Now.AddMonths(-3);
+            var result = rohlikApi.GetOrderHistory(timeBeforeLast3Months).ToList();
+            Assert.IsTrue(result.Any(), "Failed to get any orders");
+
+            result.ForEach(order => CheckOrderHistoryItem(order, timeBeforeLast3Months));
+        }
+
+        [TestMethod, TestCategory("Authenticated")]
+        public void RunRohlikovac()
         {
             var login = GetCredentials();
             var rohlikApi = new AuthenticatedRohlikApi(login[0], login[1]);

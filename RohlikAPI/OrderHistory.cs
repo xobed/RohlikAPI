@@ -23,31 +23,36 @@ namespace RohlikAPI
 
         internal IEnumerable<Order> GetAllOrders()
         {
+            return GetOrdersSinceDate(DateTime.MinValue);
+        }
+
+        internal IEnumerable<Order> GetOrdersSinceDate(DateTime getOrdersSince)
+        {
             var page = 0;
 
-            var allOrders = new List<Order>();
-            var addedOrders = new HashSet<int>();
+            var ordersToReturn = new List<Order>();
+            var alreadySeenOrders = new HashSet<int>();
 
-            var duplicateOrdersDetected = false;
+            var stopGettingOrders = false;
 
-            while (!duplicateOrdersDetected)
+            while (!stopGettingOrders)
             {
                 page++;
                 var ordersThisPage = GetOrdersForPage(page);
                 foreach (var order in ordersThisPage)
                 {
-                    if (addedOrders.Contains(order.Id))
+                    if (alreadySeenOrders.Contains(order.Id) || order.Date < getOrdersSince)
                     {
-                        duplicateOrdersDetected = true;
+                        stopGettingOrders = true;
                         break;
                     }
 
-                    allOrders.Add(order);
-                    addedOrders.Add(order.Id);
+                    ordersToReturn.Add(order);
+                    alreadySeenOrders.Add(order.Id);
                 }
             }
 
-            return allOrders;
+            return ordersToReturn;
         }
 
         private IEnumerable<Order> GetOrdersForPage(int page)
