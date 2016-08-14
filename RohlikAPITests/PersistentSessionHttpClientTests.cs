@@ -7,7 +7,7 @@ namespace RohlikAPITests
     public class PersistentSessionHttpClientTests
     {
         [TestMethod]
-        public void GetTest()
+        public void HTTPGet_PersistsCookies()
         {
             const string testCookieName = "testCookieName";
             const string testCookieValue = "testCookieValue";
