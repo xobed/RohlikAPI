@@ -7,6 +7,9 @@ namespace RohlikAPI
     public class RohlikApi
     {
         private PersistentSessionHttpClient httpClient;
+        private readonly City city;
+
+        private PersistentSessionHttpClient HttpClient => httpClient ?? SetCity(city);
 
         internal RohlikApi()
         {
@@ -14,7 +17,7 @@ namespace RohlikAPI
 
         public RohlikApi(City city)
         {
-            httpClient = SetCity(city);
+            this.city = city;
         }
 
         internal void SetHttpClient(PersistentSessionHttpClient httpClientToSet)
@@ -22,12 +25,12 @@ namespace RohlikAPI
             httpClient = httpClientToSet;
         }
 
-        private PersistentSessionHttpClient SetCity(City city)
+        private PersistentSessionHttpClient SetCity(City cityToSet)
         {
             var loginPostForm = new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>("do", "addressPopup-form-submit"),
-                new KeyValuePair<string, string>("address", city.Address)
+                new KeyValuePair<string, string>("address", cityToSet.Address)
             };
 
             var setCityUrl = "https://www.rohlik.cz/";
@@ -36,10 +39,12 @@ namespace RohlikAPI
 
             var response = httpSessionClient.Post(setCityUrl, loginPostForm);
             var responseContent = response.Content.ReadAsStringAsync().Result;
-            if (!responseContent.Contains(city.Address))
+            if (!responseContent.Contains(cityToSet.Address))
             {
-                throw new WebException($"Failed to set address '{city.Address}' for Rohlik client");
+                throw new WebException($"Failed to set address '{cityToSet.Address}' for Rohlik client");
             }
+            httpClient = httpSessionClient;
+
             return httpSessionClient;
         }
 
@@ -55,13 +60,13 @@ namespace RohlikAPI
         /// <returns>Collection of products</returns>
         public IEnumerable<Product> GetProducts(string category)
         {
-            var products = new Products(httpClient);
+            var products = new Products(HttpClient);
             return products.Get(category);
         }
 
         public IEnumerable<Product> SearchProducts(string searchString)
         {
-            var products = new Products(httpClient);
+            var products = new Products(HttpClient);
             return products.Search(searchString);
         }
 

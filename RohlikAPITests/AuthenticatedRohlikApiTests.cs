@@ -17,6 +17,7 @@ namespace RohlikAPITests
             try
             {
                 var authenticatedApiClient = new AuthenticatedRohlikApi("testemail@testemail.com", "TestPassword");
+                authenticatedApiClient.GetOrderHistory();
             }
             catch (WebException ex)
             {
