@@ -7,15 +7,19 @@ namespace RohlikAPI
 {
     public class AuthenticatedRohlikApi : RohlikApi
     {
-        private readonly PersistentSessionHttpClient httpClient;
+        private readonly string username;
+        private readonly string password;
+        private PersistentSessionHttpClient httpClient;
+
+        private PersistentSessionHttpClient HttpClient => httpClient ?? Login();
 
         public AuthenticatedRohlikApi(string username, string password)
         {
-            httpClient = Login(username, password);
-            SetHttpClient(httpClient);
+            this.username = username;
+            this.password = password;
         }
 
-        private PersistentSessionHttpClient Login(string username, string password)
+        private PersistentSessionHttpClient Login()
         {
             var loginPostForm = new List<KeyValuePair<string, string>>
             {
@@ -35,12 +39,13 @@ namespace RohlikAPI
                 throw new WebException($"Failed to login to Rohlik. Used email: {username}");
             }
 
+            httpClient = httpSessionClient;
             return httpSessionClient;
         }
 
         public string RunRohlikovac()
         {
-            var rohlikovac = new Rohlikovac(httpClient);
+            var rohlikovac = new Rohlikovac(HttpClient);
             return rohlikovac.Run();
         }
 
@@ -51,7 +56,7 @@ namespace RohlikAPI
 
         public IEnumerable<Order> GetOrderHistory(DateTime getOrdersSince)
         {
-            var orderHistory = new OrderHistory(httpClient);
+            var orderHistory = new OrderHistory(HttpClient);
             return orderHistory.GetOrdersSinceDate(getOrdersSince);
         }
     }
