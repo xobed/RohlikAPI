@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Net;
+using System.Web;
 using RohlikAPI.Model;
 
 namespace RohlikAPI
 {
     public class RohlikApi
     {
-        private PersistentSessionHttpClient httpClient;
+        protected PersistentSessionHttpClient HttpSessionClient;
         private readonly City city;
 
-        private PersistentSessionHttpClient HttpClient => httpClient ?? SetCity(city);
+        protected virtual PersistentSessionHttpClient HttpClient => HttpSessionClient ?? CreateHttpClient();
 
         internal RohlikApi()
         {
@@ -20,30 +21,25 @@ namespace RohlikAPI
             this.city = city;
         }
 
-        internal void SetHttpClient(PersistentSessionHttpClient httpClientToSet)
+        protected virtual PersistentSessionHttpClient CreateHttpClient()
         {
-            httpClient = httpClientToSet;
-        }
-
-        private PersistentSessionHttpClient SetCity(City cityToSet)
-        {
-            var loginPostForm = new List<KeyValuePair<string, string>>
+            var setAddressForm = new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>("do", "addressPopup-form-submit"),
-                new KeyValuePair<string, string>("address", cityToSet.Address)
+                new KeyValuePair<string, string>("address", city.Address)
             };
 
             var setCityUrl = "https://www.rohlik.cz/";
 
             var httpSessionClient = new PersistentSessionHttpClient();
 
-            var response = httpSessionClient.Post(setCityUrl, loginPostForm);
+            var response = httpSessionClient.Post(setCityUrl, setAddressForm);
             var responseContent = response.Content.ReadAsStringAsync().Result;
-            if (!responseContent.Contains(cityToSet.Address))
+            if (!responseContent.Contains(city.Address))
             {
-                throw new WebException($"Failed to set address '{cityToSet.Address}' for Rohlik client");
+                throw new WebException($"Failed to set address '{city.Address}' for Rohlik client");
             }
-            httpClient = httpSessionClient;
+            HttpSessionClient = httpSessionClient;
 
             return httpSessionClient;
         }

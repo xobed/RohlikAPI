@@ -7,11 +7,8 @@ namespace RohlikAPI
 {
     public class AuthenticatedRohlikApi : RohlikApi
     {
-        private readonly string username;
         private readonly string password;
-        private PersistentSessionHttpClient httpClient;
-
-        private PersistentSessionHttpClient HttpClient => httpClient ?? Login();
+        private readonly string username;
 
         public AuthenticatedRohlikApi(string username, string password)
         {
@@ -19,7 +16,9 @@ namespace RohlikAPI
             this.password = password;
         }
 
-        private PersistentSessionHttpClient Login()
+        protected override PersistentSessionHttpClient HttpClient => HttpSessionClient ?? CreateHttpClient();
+
+        protected override PersistentSessionHttpClient CreateHttpClient()
         {
             var loginPostForm = new List<KeyValuePair<string, string>>
             {
@@ -39,7 +38,7 @@ namespace RohlikAPI
                 throw new WebException($"Failed to login to Rohlik. Used email: {username}");
             }
 
-            httpClient = httpSessionClient;
+            HttpSessionClient = httpSessionClient;
             return httpSessionClient;
         }
 
