@@ -1,12 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RohlikAPI.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace RohlikAPI.HelpersTests
+namespace RohlikAPITests.Helpers
 {
     [TestClass()]
     public class PriceParserTests
