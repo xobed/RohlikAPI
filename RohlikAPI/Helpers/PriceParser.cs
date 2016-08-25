@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace RohlikAPI.Helpers
@@ -10,7 +11,7 @@ namespace RohlikAPI.Helpers
             var cleanPriceString = Regex.Match(priceString, @"\d*?,\d*").Value;
             try
             {
-                var price = double.Parse(cleanPriceString);
+                var price = double.Parse(cleanPriceString, new CultureInfo("cs-CZ"));
                 return price;
             }
             catch (Exception ex)

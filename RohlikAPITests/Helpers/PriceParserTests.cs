@@ -3,16 +3,16 @@ using RohlikAPI.Helpers;
 
 namespace RohlikAPITests.Helpers
 {
-    [TestClass()]
+    [TestClass]
     public class PriceParserTests
     {
-        [TestMethod()]
-        public void PriceParser_ParsesPrice()
+        [TestMethod]
+        public void PriceParser_ParsesCommaPrice()
         {
             var parser = new PriceParser();
             var price = parser.ParsePrice("12,34 Kč");
 
-            Assert.IsTrue(price.Equals(12.34), "Failed to parse price");
+            Assert.IsTrue(price.Equals(12.34));
         }
     }
 }
