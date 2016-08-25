@@ -51,6 +51,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="City.cs" />
+    <Compile Include="Helpers\PriceParser.cs" />
+    <Compile Include="Model\Article.cs" />
     <Compile Include="Model\JsonDeserialization\OrderSnippets.cs" />
     <Compile Include="Model\JsonDeserialization\OrdersResponse.cs" />
     <Compile Include="Model\JsonDeserialization\ProductResponse.cs" />

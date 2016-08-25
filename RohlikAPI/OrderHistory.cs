@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using Newtonsoft.Json;
+using RohlikAPI.Helpers;
 using RohlikAPI.Model;
 using RohlikAPI.Model.JsonDeserialization;
 
@@ -15,15 +17,11 @@ namespace RohlikAPI
         private const string BaseUrl = "https://www.rohlik.cz/uzivatel/profil";
 
         private readonly PersistentSessionHttpClient httpClient;
+        private readonly PriceParser priceParser = new PriceParser();
 
         internal OrderHistory(PersistentSessionHttpClient httpClient)
         {
             this.httpClient = httpClient;
-        }
-
-        internal IEnumerable<Order> GetAllOrders()
-        {
-            return GetOrdersSinceDate(DateTime.MinValue);
         }
 
         internal IEnumerable<Order> GetOrdersSinceDate(DateTime getOrdersSince)
@@ -66,13 +64,14 @@ namespace RohlikAPI
         {
             var orderNodes = document.DocumentNode.SelectNodes("//ul");
            
-            var returnList = orderNodes.Select(ParseOrderNode).ToList();
+            var returnList = orderNodes.Select(ParseOrderNode);
             return returnList;
         }
 
         private Order ParseOrderNode(HtmlNode orderNode)
         {
             var orderIdString = orderNode.SelectSingleNode(".//li/strong").InnerText;
+
             var orderId = int.Parse(orderIdString.Replace("#", ""));
 
             var dateString = orderNode.SelectSingleNode(".//li[@class='date']/span").InnerText;
@@ -84,15 +83,48 @@ namespace RohlikAPI
             var price = double.Parse(priceString.Replace("Kč", "").Replace("&nbsp;", "").Trim());
 
             var paymentMethod = orderNode.SelectSingleNode(".//li[@class='payment']/span").InnerText;
+            
+            var articlesNode = orderNode.SelectSingleNode($"//div[@class='items o{orderId}']");
+            var articles = ParseOrderArticles(articlesNode);
 
             var order = new Order
             {
                 Id = orderId,
                 Price = price,
                 Date = orderDate,
-                PaymentMethod = paymentMethod
+                PaymentMethod = paymentMethod,
+                Articles = articles
+                
             };
             return order;
+        }
+
+        private IEnumerable<Article> ParseOrderArticles(HtmlNode orderNode)
+        {
+            var articleNodes = orderNode.SelectNodes(".//article");
+            return articleNodes.Select(ParseSingleArticle);
+        }
+
+        private Article ParseSingleArticle(HtmlNode articleNode)
+        {
+            var articleNameNode = articleNode.SelectSingleNode(".//h3/a") ?? articleNode.SelectSingleNode(".//h3");
+            string articleName = articleNameNode.InnerText.Trim();
+
+            var articleCountString = articleNode.SelectSingleNode(".//p").InnerText;
+            
+            var cleanArticleCountString = Regex.Match(articleCountString, @"\d*").Value;
+            int articleCount;
+            int.TryParse(cleanArticleCountString, out articleCount);
+            
+            var priceNode = articleNode.SelectSingleNode(".//h6/strong");
+            double price = priceParser.ParsePrice(priceNode.InnerText);
+
+            return new Article
+            {
+                Count = articleCount,
+                Name = articleName,
+                Price = price
+            };
         }
 
         private HtmlDocument GetOrderHistoryForPage(int page, string baseUrl)

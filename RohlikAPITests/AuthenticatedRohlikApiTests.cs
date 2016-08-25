@@ -38,6 +38,13 @@ namespace RohlikAPITests
             return passwordString.Split(':');
         }
 
+        private void CheckArticle(Article article)
+        {
+            Assert.IsFalse(string.IsNullOrEmpty(article.Name));
+            Assert.IsNotNull(article.Price);
+            Assert.IsNotNull(article.Count);
+        }
+
         private void CheckOrderHistoryItem(Order order, DateTime timeSince)
         {
             Assert.IsTrue(order.Id > 0);
@@ -45,6 +52,8 @@ namespace RohlikAPITests
             Assert.IsNotNull(order.Date);
             Assert.IsTrue(!string.IsNullOrEmpty(order.PaymentMethod));
             Assert.IsTrue(order.Date > timeSince);
+            Assert.IsTrue(order.Articles.Any(), "Failed to get any order articles");
+            order.Articles.ToList().ForEach(CheckArticle);
         }
 
         [TestMethod, TestCategory("Authenticated")]
@@ -64,7 +73,7 @@ namespace RohlikAPITests
             var login = GetCredentials();
             var rohlikApi = new AuthenticatedRohlikApi(login[0], login[1]);
 
-            var timeBeforeLast3Months = DateTime.Now.AddMonths(-3);
+            var timeBeforeLast3Months = DateTime.Now.AddMonths(-1);
             var result = rohlikApi.GetOrderHistory(timeBeforeLast3Months).ToList();
             Assert.IsTrue(result.Any(), "Failed to get any orders");
 

@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using Newtonsoft.Json;
+using RohlikAPI.Helpers;
 using RohlikAPI.Model;
 using RohlikAPI.Model.JsonDeserialization;
 
@@ -16,6 +17,7 @@ namespace RohlikAPI
         private const string BaseUrl = "https://www.rohlik.cz/";
         private const string BaseSearchUrl = "https://www.rohlik.cz/hledat/";
         private readonly PersistentSessionHttpClient httpClient;
+        private readonly PriceParser priceParser = new PriceParser();
 
         internal Products(PersistentSessionHttpClient httpClient)
         {
@@ -69,14 +71,14 @@ namespace RohlikAPI
             product.ProductUrl = $"{rohlikUrl}{aNode.Attributes["href"].Value}";
 
             var priceNode = productNode.SelectSingleNode("*/div/h6/strong");
-            product.Price = ParsePrice(priceNode);
+            product.Price = priceParser.ParsePrice(priceNode.InnerText);
 
             var discountPriceNode = productNode.SelectSingleNode("*/div/h6/del");
 
             if (discountPriceNode != null)
             {
                 product.IsDiscounted = true;
-                product.OriginalPrice = ParsePrice(discountPriceNode);
+                product.OriginalPrice = priceParser.ParsePrice(discountPriceNode.InnerText);
                 var dateTimeNode = productNode.SelectSingleNode(".//*[@class='center-content-bot']");
                 product.DiscountedUntil = GetDateUntilDiscounted(dateTimeNode);
             }
@@ -92,24 +94,6 @@ namespace RohlikAPI
         {
             var soldOutMessageNode = productNode.SelectSingleNode(".//*[@class='naMessage']");
             return soldOutMessageNode != null;
-        }
-
-        private double ParsePrice(HtmlNode priceNode)
-        {
-            if (priceNode == null) throw new ArgumentNullException(nameof(priceNode));
-
-            var priceString = priceNode.InnerText;
-
-            var cleanPriceString = Regex.Match(priceString, @"\d*?,\d*").Value;
-            try
-            {
-                var price = double.Parse(cleanPriceString);
-                return price;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to parse product price from string '{priceString}'. Exception: {ex}");
-            }
         }
 
         private DateTime? GetDateUntilDiscounted(HtmlNode dateTimeNode)
