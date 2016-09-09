@@ -86,10 +86,9 @@ namespace RohlikAPITests
             var login = GetCredentials();
             var rohlikApi = new AuthenticatedRohlikApi(login[0], login[1]);
             var result = rohlikApi.RunRohlikovac();
-            if (result.Contains("error"))
-            {
-                Assert.Fail($"Failed to login to rohlik. Login used: {login[0]}");
-            }
+
+            Assert.IsNotNull(result.TimeBaked);
+            Assert.IsTrue(result.Message.Contains("Rohlíkovač"));
         }
     }
 }

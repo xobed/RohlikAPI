@@ -59,6 +59,7 @@
     <Compile Include="Model\JsonDeserialization\ProductSnippets.cs" />
     <Compile Include="Model\Order.cs" />
     <Compile Include="Model\Product.cs" />
+    <Compile Include="Model\RohlikovacResult.cs" />
     <Compile Include="OrderHistory.cs" />
     <Compile Include="PersistentSessionHttpClient.cs" />
     <Compile Include="Products.cs" />

@@ -42,7 +42,7 @@ namespace RohlikAPI
             return httpSessionClient;
         }
 
-        public string RunRohlikovac()
+        public RohlikovacResult RunRohlikovac()
         {
             var rohlikovac = new Rohlikovac(HttpClient);
             return rohlikovac.Run();

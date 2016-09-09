@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using System.Web;
 using HtmlAgilityPack;
+using RohlikAPI.Model;
 
 namespace RohlikAPI
 {
@@ -37,7 +38,7 @@ namespace RohlikAPI
             return resultString;
         }
 
-        public string Run()
+        private string RunAndGetMessage()
         {
             try
             {
@@ -48,6 +49,33 @@ namespace RohlikAPI
             {
                 return $"Failed to run Rohlikovac. Error: {ex.Message}. StackTrace: {ex.StackTrace}. Details: {ex}";
             }
+        }
+
+        private RohlikovacResult ParseRohlikovacResult(string resultString)
+        {
+            RohlikovacResult result = new RohlikovacResult
+            {
+                TimeBaked = DateTime.Now,
+                Message = resultString
+            };
+
+            string creditsString = Regex.Match(resultString, @"\d+").Value;
+            if (string.IsNullOrEmpty(creditsString))
+            {
+                result.Credits = 0;
+                return result;
+            }
+
+            int credits = int.Parse(creditsString);
+            result.Credits = credits;
+            return result;
+        }
+
+        public RohlikovacResult Run()
+        {
+            var resultString = RunAndGetMessage();
+            var result = ParseRohlikovacResult(resultString);
+            return result;
         }
     }
 }
