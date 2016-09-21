@@ -24,7 +24,6 @@ namespace RohlikAPITests
 
             if (isDiscounted)
             {
-                Assert.IsNotNull(product.DiscountedUntil, $"Discounted product {product.Name} does not have discounted until");
                 Assert.IsNotNull(product.OriginalPrice, $"Discounted product {product.Name} does not have original price");
             }
             else
@@ -37,6 +36,9 @@ namespace RohlikAPITests
         private void VerifyDiscountedProducts(List<Product> products)
         {
             Assert.IsTrue(products.Any(), "Failed to get any products");
+
+            // At least some products have discounted until
+            Assert.IsTrue(products.Any(p => p.DiscountedUntil != null));
             Assert.IsTrue(products.All(p => p.IsDiscounted), $"Found some products without discount: {string.Join(",", products.Where(p => !p.IsDiscounted).Select(p => p.Name).ToList())}");
             products.ForEach(p => VerifyProduct(p, true));
         }
@@ -69,7 +71,16 @@ namespace RohlikAPITests
         {
             var api = new RohlikApi(City.Brno);
             var result = api.GetCenoveTrhaky().ToList();
-            VerifyDiscountedProducts(result);
+
+            var discountedResults = result.Where(p => p.IsDiscounted);
+            var nondiscountedResults = result.Where(p => !p.IsDiscounted);
+
+            // 'Cenove Trhaky' sometimes contain products which are not discounted - Error or 'by design' on Rohli.cz side
+            // There should not be too many of those though. Allowed error level is 5%
+            double percentageOfNonDiscounted = ((nondiscountedResults.Count() / (double)result.Count) * 100);
+            Assert.IsTrue(percentageOfNonDiscounted < 5);
+
+            VerifyDiscountedProducts(discountedResults.ToList());
         }
 
         [TestMethod]
