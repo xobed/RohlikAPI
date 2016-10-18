@@ -19,6 +19,8 @@ namespace RohlikAPI
         private readonly PersistentSessionHttpClient httpClient;
         private readonly PriceParser priceParser = new PriceParser();
 
+        private readonly DateTime currentDate = DateTime.Now;
+
         internal Products(PersistentSessionHttpClient httpClient)
         {
             this.httpClient = httpClient;
@@ -99,11 +101,18 @@ namespace RohlikAPI
         private DateTime? GetDateUntilDiscounted(HtmlNode dateTimeNode)
         {
             var dateTimeString = dateTimeNode.InnerText;
-            dateTimeString = dateTimeString.Replace("Do", "");
+            dateTimeString = dateTimeString.Replace("Akce do ", "");
             dateTimeString = Regex.Replace(dateTimeString, @"\s", "");
+            dateTimeString += currentDate.Year;
+            
             try
             {
                 var dateTime = DateTime.Parse(dateTimeString, new CultureInfo("cs-CZ"));
+                // Date is less than current, e.g. 'Akce do 1.1.' displayed on 24.12.
+                if (dateTime < currentDate)
+                {
+                    dateTime = dateTime.AddYears(1);
+                }
                 return dateTime;
             }
             catch (FormatException ex)

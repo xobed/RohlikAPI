@@ -77,7 +77,7 @@ namespace RohlikAPITests
 
             // 'Cenove Trhaky' sometimes contain products which are not discounted - Error or 'by design' on Rohli.cz side
             // There should not be too many of those though. Allowed error level is 5%
-            double percentageOfNonDiscounted = ((nondiscountedResults.Count() / (double)result.Count) * 100);
+            double percentageOfNonDiscounted = nondiscountedResults.Count() / (double)result.Count * 100;
             Assert.IsTrue(percentageOfNonDiscounted < 5);
 
             VerifyDiscountedProducts(discountedResults.ToList());
