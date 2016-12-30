@@ -43,6 +43,16 @@ namespace RohlikAPITests
             products.ForEach(p => VerifyProduct(p, true));
         }
 
+        private void VerifyLastMinuteProducts(List<Product> products)
+        {
+            Assert.IsTrue(products.Any(), "Failed to get any products");
+
+            // Last minute products do not have 'discounted until'
+            Assert.IsTrue(products.All(p => p.DiscountedUntil == null));
+            Assert.IsTrue(products.All(p => p.IsDiscounted), $"Found some products without discount: {string.Join(",", products.Where(p => !p.IsDiscounted).Select(p => p.Name).ToList())}");
+            products.ForEach(p => VerifyProduct(p, true));
+        }
+
         private void VerifyNonDiscountedProducts(List<Product> products)
         {
             Assert.IsTrue(products.Any(), "Failed to get any products");
@@ -88,7 +98,7 @@ namespace RohlikAPITests
         {
             var api = new RohlikApi(City.Brno);
             var result = api.GetLastMinute().ToList();
-            VerifyDiscountedProducts(result);
+            VerifyLastMinuteProducts(result);
         }
 
         [TestMethod]

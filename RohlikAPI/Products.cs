@@ -51,8 +51,7 @@ namespace RohlikAPI
         private IEnumerable<Product> ParseProducts(HtmlDocument document)
         {
             var productNodes = document.DocumentNode.SelectNodes(@"//*[@class='productGridWrapper']/div[contains(@class,'baseProduct')]//div[@class='productContainerWrap']");
-            var parsedProducts = productNodes.Select(GetProductFromNode).ToList();
-            parsedProducts.RemoveAll(p => p == null);
+            var parsedProducts = productNodes.Select(GetProductFromNode).Where(p => p != null);            
             return parsedProducts;
         }
 
@@ -82,7 +81,10 @@ namespace RohlikAPI
                 product.IsDiscounted = true;
                 product.OriginalPrice = priceParser.ParsePrice(discountPriceNode.InnerText);
                 var dateTimeNode = productNode.SelectSingleNode(".//*[@class='center-content-bot']");
-                product.DiscountedUntil = GetDateUntilDiscounted(dateTimeNode);
+                if (dateTimeNode != null)
+                {
+                    product.DiscountedUntil = GetDateUntilDiscounted(dateTimeNode);
+                }                
             }
             else
             {
@@ -100,6 +102,10 @@ namespace RohlikAPI
 
         private DateTime? GetDateUntilDiscounted(HtmlNode dateTimeNode)
         {
+            if (dateTimeNode == null)
+            {
+                throw new ArgumentNullException(nameof(dateTimeNode));
+            }
             var dateTimeString = dateTimeNode.InnerText;
             dateTimeString = dateTimeString.Replace("Akce do ", "");
             dateTimeString = Regex.Replace(dateTimeString, @"\s", "");
