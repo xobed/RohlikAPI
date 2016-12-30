@@ -1,3 +1,4 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/4y623vi8brytp228?svg=true)](https://ci.appveyor.com/project/notdev/rohlikapi)  
 Web scraping API for www.rohlik.cz
 
 Available on Nuget:
