@@ -18,8 +18,7 @@ namespace RohlikAPIWeb
             if (products == null)
             {
                 var api = new RohlikApi(City.Brno);
-                //products = api.GetAllProducts().ToList();
-                products = api.GetLastMinute().ToList();
+                products = api.GetAllProducts().ToList();
                 fileSystemCache.SetProductCache(products);
             }
             return products;
