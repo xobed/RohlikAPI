@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Categories.cs" />
     <Compile Include="City.cs" />
     <Compile Include="Helpers\PriceParser.cs" />
     <Compile Include="Model\Article.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Model\RohlikovacResult.cs" />
     <Compile Include="OrderHistory.cs" />
     <Compile Include="PersistentSessionHttpClient.cs" />
+    <Compile Include="ProductComparer.cs" />
     <Compile Include="Products.cs" />
     <Compile Include="RohlikApi.cs" />
     <Compile Include="AuthenticatedRohlikApi.cs" />
