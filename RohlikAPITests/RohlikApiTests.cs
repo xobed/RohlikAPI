@@ -108,5 +108,22 @@ namespace RohlikAPITests
             var result = api.SearchProducts("Nestle").ToList();
             VerifyNonDiscountedProducts(result);
         }
+
+        [TestMethod]
+        public void GetAllCategories()
+        {
+            var api = new RohlikApi(City.Brno);
+            var result = api.GetCategories();
+            Assert.IsTrue(result.Any());
+        }
+
+        [TestMethod]
+        public void GetAllProducts()
+        {
+            var api = new RohlikApi(City.Brno);
+            var allProducts = api.GetAllProducts().ToList();
+            Assert.IsTrue(allProducts.Any());
+            VerifyNonDiscountedProducts(allProducts);
+        }
     }
 }

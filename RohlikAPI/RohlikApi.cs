@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
-using System.Web;
 using RohlikAPI.Model;
 
 namespace RohlikAPI
@@ -84,6 +84,27 @@ namespace RohlikAPI
         {
             const string cenoveTrhakyCategory = "cenove-trhaky";
             return GetProducts(cenoveTrhakyCategory);
+        }
+
+        /// <summary>
+        ///     Get URLs for all categories visible on main Rohli.cz page
+        /// </summary>
+        /// <returns>List of category URL strings</returns>
+        public IEnumerable<string> GetCategories()
+        {
+            var categories = new Categories(HttpClient);
+            return categories.GetAllCategories();
+        }
+
+        /// <summary>
+        ///     Get all products available in all categories
+        /// </summary>
+        /// <returns>List of all products</returns>
+        public IEnumerable<Product> GetAllProducts()
+        {
+            var categories = GetCategories();
+            var allProducts = categories.SelectMany(GetProducts);
+            return allProducts.Distinct(new ProductComparer());
         }
     }
 }
