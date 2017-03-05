@@ -4,17 +4,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 </head>
 <body>
-    <form id="main" v-cloak>
-        <input type="text" v-model="searchString" placeholder="Search.." />
-        <ul id="productList">
-            <li v-for="product in filteredProducts">
+<form id="main" v-cloak>
+    <input type="text" v-model="searchString" placeholder="Search.." />
+    <div id="productList">
+        <div v-for="product in filteredProducts">
+            <div>
                 <a v-bind:href="product.ProductUrl">
                     <span>{{product.Name}}</span>
                     <span>{{product.Price}}</span>
                 </a>
-            </li>
-        </ul>
-    </form>
+            </div>
+        </div>
+    </div>
+</form>
 
 </body>
 <script type='text/javascript'>
