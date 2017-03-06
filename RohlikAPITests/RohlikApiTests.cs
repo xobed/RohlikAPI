@@ -113,8 +113,12 @@ namespace RohlikAPITests
         public void GetAllCategories()
         {
             var api = new RohlikApi(City.Brno);
-            var result = api.GetCategories();
-            Assert.IsTrue(result.Any());
+            var results = api.GetCategories().ToList();
+            Assert.IsTrue(results.Any());
+            foreach (var result in results)
+            {
+                Assert.IsFalse(result.ToLower().Contains("rohlik.cz"));
+            }
         }
 
         [TestMethod]
@@ -122,7 +126,6 @@ namespace RohlikAPITests
         {
             var api = new RohlikApi(City.Brno);
             var allProducts = api.GetAllProducts().ToList();
-            Assert.IsTrue(allProducts.Any());
             VerifyNonDiscountedProducts(allProducts);
         }
     }

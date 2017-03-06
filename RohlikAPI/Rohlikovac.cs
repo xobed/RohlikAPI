@@ -9,7 +9,7 @@ namespace RohlikAPI
     internal class Rohlikovac
     {
         // Rohlikovac result xPath
-        private const string RohlikovacResult = "//*[@id='rohlikovac']//h2";
+        private const string RohlikovacResult = ".//div[@class='popup__content']/h2";
         private const string RohlikovacUrl = "https://www.rohlik.cz/stranka/rohlikovac?do=creditForge-roll";
 
         private readonly PersistentSessionHttpClient httpSessionClient;

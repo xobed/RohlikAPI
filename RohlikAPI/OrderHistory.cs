@@ -62,7 +62,7 @@ namespace RohlikAPI
 
         private IEnumerable<Order> ParseOrderHistory(HtmlDocument document)
         {
-            var orderNodes = document.DocumentNode.SelectNodes("//ul");
+            var orderNodes = document.DocumentNode.SelectNodes("//ul/li/div");
            
             var returnList = orderNodes.Select(ParseOrderNode);
             return returnList;
@@ -70,21 +70,27 @@ namespace RohlikAPI
 
         private Order ParseOrderNode(HtmlNode orderNode)
         {
-            var orderIdString = orderNode.SelectSingleNode(".//li/strong").InnerText;
+            var orderIdString = orderNode.SelectSingleNode(".//span[@class='orders__id']").InnerText;
 
             var orderId = int.Parse(orderIdString.Replace("#", ""));
 
-            var dateString = orderNode.SelectSingleNode(".//li[@class='date']/span").InnerText;
+            var dateString = orderNode.SelectSingleNode(".//span[@class='orders__date']").InnerText;
 
             var orderDate = DateTime.Parse(dateString.Replace(" ", ""), new CultureInfo("cs-CZ"));
 
-            var priceString = orderNode.SelectSingleNode(".//li[@class='price']/span").InnerText;
+            var paymentNode = orderNode.SelectSingleNode(".//span[@class='orders__payment']");
 
-            var price = double.Parse(priceString.Replace("Kč", "").Replace("&nbsp;", "").Trim());
+            var paymentNodeText = paymentNode.InnerText.Replace("&ndash;", "-").Replace("&nbsp;", "").Trim();
 
-            var paymentMethod = orderNode.SelectSingleNode(".//li[@class='payment']/span").InnerText;
-            
-            var articlesNode = orderNode.SelectSingleNode($"//div[@class='items o{orderId}']");
+            var paymentNodeSplit = paymentNodeText.Split('-');
+
+            var priceString = paymentNodeSplit[1];
+
+            var price = double.Parse(priceString.Replace("Kč", ""));
+
+            var paymentMethod = paymentNodeSplit[0];
+
+            var articlesNode = orderNode.SelectSingleNode($"//div[@data-item='o{orderId}']/div[@class='orders__content-wrapper']/div[@class='products-table']");
             var articles = ParseOrderArticles(articlesNode);
 
             var order = new Order

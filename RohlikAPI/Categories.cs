@@ -15,13 +15,25 @@ namespace RohlikAPI
 
         public IEnumerable<string> GetAllCategories()
         {
-            var rohlikFrontString = httpClient.Get("https://www.rohlik.cz/");
+            var rohlikDomain = "https://www.rohlik.cz/";
+
+            var rohlikFrontString = httpClient.Get(rohlikDomain);
             var rohlikFrontDocument = new HtmlDocument();
             rohlikFrontDocument.LoadHtml(rohlikFrontString);
 
-            var categoryNodes = rohlikFrontDocument.DocumentNode.SelectNodes("//div[contains(@id,'rootcat')]/div/a");
+            var categoryNodes = rohlikFrontDocument.DocumentNode.SelectNodes("//div[@data-menu-id='sortiment']//div[contains(@class,'rootcat')]/div/a");
             var categoryHrefs = categoryNodes.Select(c => c.Attributes["href"].Value);
-            return categoryHrefs.Select(c => c.Substring(1));
+            foreach (var categoryHref in categoryHrefs)
+            {
+                if (categoryHref.Contains(rohlikDomain))
+                {
+                    yield return categoryHref.Replace(rohlikDomain, "");
+                }
+                else
+                {
+                    yield return categoryHref.Substring(1);
+                }
+            }
         }
     }
 }

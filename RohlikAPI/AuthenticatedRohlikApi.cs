@@ -33,7 +33,7 @@ namespace RohlikAPI
 
             var response = httpSessionClient.Post(rohlikLoginUrl, loginPostForm);
             var responseContent = response.Content.ReadAsStringAsync().Result;
-            if (!responseContent.Contains("Můj účet"))
+            if (responseContent.Contains("Zadal(a) jste nesprávný e-mail nebo heslo"))
             {
                 throw new WebException($"Failed to login to Rohlik. Used email: {username}");
             }

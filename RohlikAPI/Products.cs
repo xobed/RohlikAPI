@@ -50,7 +50,7 @@ namespace RohlikAPI
 
         private IEnumerable<Product> ParseProducts(HtmlDocument document)
         {
-            var productNodes = document.DocumentNode.SelectNodes(@"//*[@class='productGridWrapper']/div[contains(@class,'baseProduct')]//div[@class='productContainerWrap']");
+            var productNodes = document.DocumentNode.SelectNodes(@"//*[@class='product__grid_wrapper']/div[@class='base_product']//div[@class='product__wrapper']");
             var parsedProducts = productNodes.Select(GetProductFromNode).Where(p => p != null);            
             return parsedProducts;
         }
@@ -64,23 +64,23 @@ namespace RohlikAPI
             }
             var product = new Product();
 
-            var aNode = productNode.SelectSingleNode("*/h3/a");
+            var aNode = productNode.SelectSingleNode(".//div/h3/a");
 
-            product.Name = aNode.InnerText;
+            product.Name = aNode.InnerText.Trim();
 
             const string rohlikUrl = "https://rohlik.cz";
             product.ProductUrl = $"{rohlikUrl}{aNode.Attributes["href"].Value}";
 
-            var priceNode = productNode.SelectSingleNode("*/div/h6/strong");
+            var priceNode = productNode.SelectSingleNode(".//div[contains(@class,'tac')]/strong");
             product.Price = priceParser.ParsePrice(priceNode.InnerText);
 
-            var discountPriceNode = productNode.SelectSingleNode("*/div/h6/del");
+            var discountPriceNode = productNode.SelectSingleNode(".//div[@class='action tac']/del");
 
             if (discountPriceNode != null)
             {
                 product.IsDiscounted = true;
                 product.OriginalPrice = priceParser.ParsePrice(discountPriceNode.InnerText);
-                var dateTimeNode = productNode.SelectSingleNode(".//*[@class='center-content-bot']");
+                var dateTimeNode = productNode.SelectSingleNode(".//div[@class='circle']/span");
                 if (dateTimeNode != null)
                 {
                     product.DiscountedUntil = GetDateUntilDiscounted(dateTimeNode);
@@ -96,7 +96,7 @@ namespace RohlikAPI
 
         private bool IsSoldOut(HtmlNode productNode)
         {
-            var soldOutMessageNode = productNode.SelectSingleNode(".//*[@class='naMessage']");
+            var soldOutMessageNode = productNode.SelectSingleNode(".//div[@class='product__unavailable']");
             return soldOutMessageNode != null;
         }
 
