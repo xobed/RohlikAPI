@@ -107,22 +107,23 @@ namespace RohlikAPI
 
         private IEnumerable<Article> ParseOrderArticles(HtmlNode orderNode)
         {
-            var articleNodes = orderNode.SelectNodes(".//article");
+            var articleNodes = orderNode.SelectNodes(".//div[@class='products-table__product']");
             return articleNodes.Select(ParseSingleArticle);
         }
 
         private Article ParseSingleArticle(HtmlNode articleNode)
         {
-            var articleNameNode = articleNode.SelectSingleNode(".//h3/a") ?? articleNode.SelectSingleNode(".//h3");
+            var articleNameNode = articleNode.SelectSingleNode(".//a[@class='products-table__name']");
             string articleName = articleNameNode.InnerText.Trim();
-
-            var articleCountString = articleNode.SelectSingleNode(".//p").InnerText;
             
-            var cleanArticleCountString = Regex.Match(articleCountString, @"\d*").Value;
+            var articleCountNode = articleNode.SelectSingleNode(".//div[@class='products-table__quantity products-table__quantity--number']");
+            var articleCountString = articleCountNode.InnerText;
+            
+            var cleanArticleCountString = Regex.Match(articleCountString, @"\d+").Value;
             int articleCount;
             int.TryParse(cleanArticleCountString, out articleCount);
             
-            var priceNode = articleNode.SelectSingleNode(".//h6/strong");
+            var priceNode = articleNode.SelectSingleNode(".//div[@class='products-table__price']");
             double price = priceParser.ParsePrice(priceNode.InnerText);
 
             return new Article
