@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HtmlAgilityPack;
 
@@ -25,15 +26,24 @@ namespace RohlikAPI
             var categoryHrefs = categoryNodes.Select(c => c.Attributes["href"].Value);
             foreach (var categoryHref in categoryHrefs)
             {
-                if (categoryHref.Contains(rohlikDomain))
+                // strip any parameters
+                string hrefWithoutParameters = StripUrlParameters(categoryHref);
+
+                if (hrefWithoutParameters.Contains(rohlikDomain))
                 {
-                    yield return categoryHref.Replace(rohlikDomain, "");
+                    yield return hrefWithoutParameters.Replace(rohlikDomain, "");
                 }
                 else
                 {
-                    yield return categoryHref.Substring(1);
+                    yield return hrefWithoutParameters.Substring(1);
                 }
             }
+        }
+
+        private string StripUrlParameters(string categoryHref)
+        {
+            var questionMarkIndex = categoryHref.IndexOf("?", StringComparison.Ordinal);
+            return questionMarkIndex != -1 ? categoryHref.Substring(0,questionMarkIndex) : categoryHref;
         }
     }
 }

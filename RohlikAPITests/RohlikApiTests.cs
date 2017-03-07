@@ -118,6 +118,7 @@ namespace RohlikAPITests
             foreach (var result in results)
             {
                 Assert.IsFalse(result.ToLower().Contains("rohlik.cz"));
+                Assert.IsFalse(result.Contains("?"));
             }
         }
 

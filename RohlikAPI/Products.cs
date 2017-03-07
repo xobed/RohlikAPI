@@ -169,6 +169,8 @@ namespace RohlikAPI
 
         private string CleanProductResults(string productString)
         {
+            if (string.IsNullOrEmpty(productString)) throw new ArgumentException(productString);
+
             var cleanedString = productString.Replace("\n", "").Replace("\t", "").Replace(@"\""", @"""");
             return cleanedString;
         }
