@@ -12,6 +12,7 @@
                 <a v-bind:href="product.ProductUrl">
                     <span>{{product.Name}}</span>
                     <span>{{product.Price}}</span>
+                    <span>{{product.PPU}}</span>
                 </a>
             </div>
         </div>
@@ -43,7 +44,7 @@
                 searchString = searchString.trim().toLowerCase();
 
                 productArray = productArray.filter(function (item) {
-                    if (item.Name.toLowerCase().indexOf(searchString) !== -1) {
+                    if (item.Sname.indexOf(searchString) !== -1) {
                         return item;
                     }
                 })
