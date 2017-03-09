@@ -21,7 +21,7 @@ namespace RohlikAPIWeb.Cache
                 products = api.GetAllProducts().ToList();
                 fileSystemCache.SetProductCache(products);
             }
-            return products.Select(p => new ApiProduct(p.Name, p.Price, p.PricePerUnit, p.Unit)).ToList();
+            return products.Select(p => new ApiProduct(p.Name, p.Price, p.PricePerUnit, p.Unit, p.ProductUrl)).ToList();
         }
 
 

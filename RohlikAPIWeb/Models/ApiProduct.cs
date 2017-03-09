@@ -15,13 +15,15 @@ namespace RohlikAPIWeb.Models
         public double PPU { get; }
         public string Unit { get; }
         public string Sname { get; }
+        public string Href { get; }
 
-        public ApiProduct(string name, double price, double pricePerUnit, string unit)
+        public ApiProduct(string name, double price, double pricePerUnit, string unit, string href)
         {
             Name = name;
             Price = price;
             PPU = pricePerUnit;
             Unit = unit;
+            Href = href;
             Sname = StandardizeString(name);
         }
 
