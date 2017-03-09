@@ -211,3 +211,5 @@ GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
 /loginPassword.txt
+/RohlikAPIWeb/responseCache.json
+/RohlikAPIWeb/timestamp.json

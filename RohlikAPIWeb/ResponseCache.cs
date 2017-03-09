@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Caching;
 using RohlikAPI;
-using RohlikAPI.Model;
+using RohlikAPIWeb.Models;
 
 namespace RohlikAPIWeb
 {
@@ -12,7 +12,7 @@ namespace RohlikAPIWeb
         private static readonly MemoryCache Cache = MemoryCache.Default;
         private readonly FileSystemCache fileSystemCache = new FileSystemCache();
 
-        private List<Product> InitializeProductCache()
+        private List<ApiProduct> InitializeProductCache()
         {
             var products = fileSystemCache.GetAllProducts();
             if (products == null)
@@ -21,7 +21,7 @@ namespace RohlikAPIWeb
                 products = api.GetAllProducts().ToList();
                 fileSystemCache.SetProductCache(products);
             }
-            return products;
+            return products.Select(p => new ApiProduct(p.Name, p.Price, p.PricePerUnit, p.Unit)).ToList();
         }
 
 
@@ -40,7 +40,7 @@ namespace RohlikAPIWeb
             }
         }
 
-        public List<Product> GetAllProducts()
+        public List<ApiProduct> GetAllProducts()
         {
             return AddOrGetExisting("allproducts", InitializeProductCache);
         }

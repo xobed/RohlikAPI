@@ -118,6 +118,7 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="FileSystemCache.cs" />
+    <Compile Include="Models\ApiProduct.cs" />
     <Compile Include="ResponseCache.cs" />
     <Compile Include="Controllers\RohlikController.cs" />
     <Compile Include="Global.asax.cs">
@@ -140,7 +141,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

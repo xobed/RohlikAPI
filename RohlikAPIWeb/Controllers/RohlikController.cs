@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using RohlikAPI.Model;
+using RohlikAPIWeb.Models;
 
 namespace RohlikAPIWeb.Controllers
 {
@@ -14,7 +15,7 @@ namespace RohlikAPIWeb.Controllers
 
         [HttpGet]
         [Route("api/GetAllProducts")]
-        public List<Product> Get()
+        public List<ApiProduct> Get()
         {
             return Cache.GetAllProducts();
         }
