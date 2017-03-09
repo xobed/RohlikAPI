@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+﻿using System.Collections.Generic;
 using System.Web.Http;
-using RohlikAPI.Model;
+using RohlikAPIWeb.Cache;
 using RohlikAPIWeb.Models;
 
 namespace RohlikAPIWeb.Controllers

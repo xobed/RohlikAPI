@@ -6,7 +6,7 @@ using System.Web;
 using Newtonsoft.Json;
 using RohlikAPI.Model;
 
-namespace RohlikAPIWeb
+namespace RohlikAPIWeb.Cache
 {
     public class FileSystemCache
     {

@@ -5,7 +5,7 @@ using System.Runtime.Caching;
 using RohlikAPI;
 using RohlikAPIWeb.Models;
 
-namespace RohlikAPIWeb
+namespace RohlikAPIWeb.Cache
 {
     public class ResponseCache
     {
