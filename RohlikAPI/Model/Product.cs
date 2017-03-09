@@ -6,6 +6,8 @@ namespace RohlikAPI.Model
     {
         public string Name { get; set; }
         public double Price { get; set; }
+        public double PricePerUnit { get; set; }
+        public string Unit { get; set; }
         public bool IsDiscounted { get; set; }
         public double? OriginalPrice { get; set; }
         public DateTime? DiscountedUntil { get; set; }

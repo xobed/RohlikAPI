@@ -21,6 +21,9 @@ namespace RohlikAPITests
             Assert.IsNotNull(product.Name, "Product name was null");
             Assert.IsNotNull(product.ProductUrl, $"Product {product.Name} does not have an url");
             Assert.IsTrue(product.Price > 0, $"Product {product.Name} does not have price");
+            Assert.IsTrue(product.PricePerUnit > 0, $"Product {product.Name} does not have price per unit");
+            Assert.IsFalse(string.IsNullOrEmpty(product.Unit), $"Product {product.Name} does not have unit text");
+            Assert.IsFalse(product.Unit.Contains("(") || product.Unit.Contains(")"), $"Product {product.Name} - unit contains unexpected characters - '{product.Unit}'");
 
             if (isDiscounted)
             {
@@ -85,7 +88,7 @@ namespace RohlikAPITests
             var discountedResults = result.Where(p => p.IsDiscounted);
             var nondiscountedResults = result.Where(p => !p.IsDiscounted);
 
-            // 'Cenove Trhaky' sometimes contain products which are not discounted - Error or 'by design' on Rohli.cz side
+            // 'Cenove Trhaky' sometimes contain products which are not discounted - Error or 'by design' on Rohlik.cz side
             // There should not be too many of those though. Allowed error level is 5%
             double percentageOfNonDiscounted = nondiscountedResults.Count() / (double)result.Count * 100;
             Assert.IsTrue(percentageOfNonDiscounted < 5);
