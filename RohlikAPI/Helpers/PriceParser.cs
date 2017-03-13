@@ -8,7 +8,8 @@ namespace RohlikAPI.Helpers
     {
         public double ParsePrice(string priceString)
         {
-            var cleanPriceString = Regex.Match(priceString, @"(\d*?,\d*)|(\d+)").Value;
+            var priceStringWithoutSpaces = priceString.Replace(" ", "");
+            var cleanPriceString = Regex.Match(priceStringWithoutSpaces, @"(\d*?,\d*)|(\d+)").Value;
             try
             {
                 var price = double.Parse(cleanPriceString, new CultureInfo("cs-CZ"));
