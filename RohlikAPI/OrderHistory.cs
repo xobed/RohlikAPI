@@ -62,7 +62,7 @@ namespace RohlikAPI
 
         private IEnumerable<Order> ParseOrderHistory(HtmlDocument document)
         {
-            var orderNodes = document.DocumentNode.SelectNodes("//ul/li/div");
+            var orderNodes = document.DocumentNode.SelectNodes(".//li[@class='orders__item js_orderDetail']");
            
             var returnList = orderNodes.Select(ParseOrderNode);
             return returnList;
