@@ -13,6 +13,10 @@ namespace RohlikAPI.Helpers
             try
             {
                 var price = double.Parse(cleanPriceString, new CultureInfo("cs-CZ"));
+                if (price <= 0)
+                {
+                    throw new Exception($"Failed to get product price from string '{priceString}'. Resulting price was {price}");
+                }
                 return price;
             }
             catch (Exception ex)
