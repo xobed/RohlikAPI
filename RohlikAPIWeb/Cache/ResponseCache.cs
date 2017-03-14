@@ -39,5 +39,10 @@ namespace RohlikAPIWeb.Cache
         {
             return AddOrGetExisting("allproducts", InitializeProductCache);
         }
+
+        public void SetProductCache(ApiResponse response)
+        {
+            Cache.Set("allproducts", response, DateTime.Now.AddMinutes(30));
+        }
     }
 }

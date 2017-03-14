@@ -1,10 +1,7 @@
-﻿using System;
-using System.Configuration;
-using System.Linq;
+﻿using System.Configuration;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Results;
-using RohlikAPI;
 using RohlikAPIWeb.Cache;
 using RohlikAPIWeb.Models;
 
@@ -33,9 +30,10 @@ namespace RohlikAPIWeb.Controllers
                 return new StatusCodeResult(HttpStatusCode.Unauthorized, Request);
             }
 
-            ApiResponse response = RohlikSync.CreateApiResponse();
+            var response = RohlikSync.CreateApiResponse();
 
             FileSystemCache.SetProductCache(response);
+            Cache.SetProductCache(response);
             return Ok();
         }
     }
