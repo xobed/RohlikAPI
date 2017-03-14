@@ -1,23 +1,59 @@
 <html>
+
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.1/vue.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <style>
+        table {
+            border: 2px solid #42b983;
+            border-radius: 3px;
+            background-color: #fff;
+        }
+        
+        th {
+            background-color: #42b983;
+            color: rgba(255, 255, 255, 0.66);
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        td {
+            background-color: #f9f9f9;
+        }
+        
+        th,
+        td {
+            min-width: 120px;
+            padding: 10px 20px;
+        }
+    </style>
 </head>
+
 <body>
-<form id="main" v-cloak>
-    <input type="text" v-model="searchString" placeholder="Search.." />
-    <div id="productList">
-        <div v-for="product in filteredProducts">
-            <div>
-                <a v-bind:href="product.Href">
-                    <span>{{product.Name}}</span>
-                    <span>{{product.Price}}</span>
-                    <span>{{product.PPU}}</span>
-                </a>
-            </div>
+    <form id="main" v-cloak>
+        <input type="text" v-model="searchString" placeholder="Search.." />
+        <div id="productList">
+            <table>
+                <thead>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Price per unit</th>
+                    <th>Unit</th>
+                </thead>
+                <tbody>
+                    <tr v-for="product in filteredProducts">
+                        <td><a v-bind:href="product.Href">{{product.Name}}</a></td>
+                        <td>{{product.Price}}</td>
+                        <td>{{product.PPU}}</td>
+                        <td>{{product.Unit}}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-    </div>
-</form>
+    </form>
 
 </body>
 <script type='text/javascript'>
@@ -38,7 +74,7 @@
                 var searchString = this.searchString;
 
                 if (!searchString) {
-                    return null;
+                    return productArray;
                 }
 
                 searchString = searchString.trim().toLowerCase();
@@ -65,5 +101,7 @@
             }
         }
     });
+
 </script>
+
 </html>
