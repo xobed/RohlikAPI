@@ -11,8 +11,8 @@ namespace RohlikAPIWeb.Models
             Products = products;
         }
 
-        public IEnumerable<ApiProduct> Products { get; set; }
-
         public DateTime SyncTime { get; set; }
+
+        public IEnumerable<ApiProduct> Products { get; set; }
     }
 }
