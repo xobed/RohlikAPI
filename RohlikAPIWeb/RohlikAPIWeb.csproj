@@ -118,6 +118,7 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Cache\FileSystemCache.cs" />
+    <Compile Include="Controllers\RohlikSync.cs" />
     <Compile Include="Models\ApiProduct.cs" />
     <Compile Include="Cache\ResponseCache.cs" />
     <Compile Include="Controllers\RohlikController.cs" />

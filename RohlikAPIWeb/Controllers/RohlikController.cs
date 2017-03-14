@@ -14,6 +14,7 @@ namespace RohlikAPIWeb.Controllers
     {
         private static readonly ResponseCache Cache = new ResponseCache();
         private static readonly FileSystemCache FileSystemCache = new FileSystemCache();
+        private static readonly RohlikSync RohlikSync = new RohlikSync();
 
         [HttpGet]
         [Route("api/GetAllProducts")]
@@ -32,10 +33,7 @@ namespace RohlikAPIWeb.Controllers
                 return new StatusCodeResult(HttpStatusCode.Unauthorized, Request);
             }
 
-            var api = new RohlikApi(City.Brno);
-            var products = api.GetAllProducts().ToList();
-            var apiProducts = products.Select(p => new ApiProduct(p.Name, p.Price, p.PricePerUnit, p.Unit, p.ProductUrl)).OrderBy(p => p.PPU);
-            var response = new ApiResponse(DateTime.UtcNow, apiProducts);
+            ApiResponse response = RohlikSync.CreateApiResponse();
 
             FileSystemCache.SetProductCache(response);
             return Ok();
