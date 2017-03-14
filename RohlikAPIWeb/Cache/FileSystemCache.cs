@@ -1,43 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using System.Web;
 using Newtonsoft.Json;
-using RohlikAPI.Model;
+using RohlikAPIWeb.Models;
 
 namespace RohlikAPIWeb.Cache
 {
     public class FileSystemCache
     {
         private readonly string cacheFilePath = Path.Combine(HttpRuntime.AppDomainAppPath, @"responseCache.json");
-        private readonly string timeStampFilePath = Path.Combine(HttpRuntime.AppDomainAppPath, @"timestamp.json");
-
         private readonly object lockObject = new object();
 
-        private bool IsCacheValid()
-        {
-            try
-            {
-                var timeStamp = File.ReadAllText(timeStampFilePath);
-                var expiration = JsonConvert.DeserializeObject<DateTime>(timeStamp);
-                return DateTime.UtcNow < expiration;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        public List<Product> GetAllProducts()
+        public ApiResponse GetAllProducts()
         {
             lock (lockObject)
             {
-                if (!IsCacheValid())
-                {
-                    return null;
-                }
-
                 string productsString;
                 try
                 {
@@ -50,7 +27,7 @@ namespace RohlikAPIWeb.Cache
 
                 try
                 {
-                    var productsCache = JsonConvert.DeserializeObject<List<Product>>(productsString);
+                    var productsCache = JsonConvert.DeserializeObject<ApiResponse>(productsString);
                     return productsCache;
                 }
                 // Return null on deserialization error
@@ -66,14 +43,10 @@ namespace RohlikAPIWeb.Cache
             }
         }
 
-        public void SetProductCache(List<Product> productList)
+        public void SetProductCache(ApiResponse productList)
         {
             lock (lockObject)
             {
-                var expiration = DateTime.UtcNow.AddMinutes(90);
-                var serializedExpiration = JsonConvert.SerializeObject(expiration);
-                File.WriteAllText(timeStampFilePath, serializedExpiration);
-
                 var serializedProducts = JsonConvert.SerializeObject(productList);
                 File.WriteAllText(cacheFilePath, serializedProducts, Encoding.UTF8);
             }

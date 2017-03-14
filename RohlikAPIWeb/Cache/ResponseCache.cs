@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Caching;
-using RohlikAPI;
 using RohlikAPIWeb.Models;
 
 namespace RohlikAPIWeb.Cache
@@ -12,23 +9,21 @@ namespace RohlikAPIWeb.Cache
         private static readonly MemoryCache Cache = MemoryCache.Default;
         private readonly FileSystemCache fileSystemCache = new FileSystemCache();
 
-        private List<ApiProduct> InitializeProductCache()
+        private ApiResponse InitializeProductCache()
         {
-            var products = fileSystemCache.GetAllProducts();
-            if (products == null)
+            var apiResponse = fileSystemCache.GetAllProducts();
+            if (apiResponse == null)
             {
-                var api = new RohlikApi(City.Brno);
-                products = api.GetAllProducts().ToList();
-                fileSystemCache.SetProductCache(products);
+                throw new Exception("Failed to get products from file system cache. Products need to be initialized by calling UpdateProducts.");
             }
-            return products.Select(p => new ApiProduct(p.Name, p.Price, p.PricePerUnit, p.Unit, p.ProductUrl)).OrderBy(p => p.PPU).ToList();
+            return apiResponse;
         }
 
 
         private T AddOrGetExisting<T>(string key, Func<T> valueFactory)
         {
             var newValue = new Lazy<T>(valueFactory);
-            var oldValue = Cache.AddOrGetExisting(key, newValue, DateTime.Now.AddMinutes(90)) as Lazy<T>;
+            var oldValue = Cache.AddOrGetExisting(key, newValue, DateTime.Now.AddMinutes(30)) as Lazy<T>;
             try
             {
                 return (oldValue ?? newValue).Value;
@@ -40,7 +35,7 @@ namespace RohlikAPIWeb.Cache
             }
         }
 
-        public List<ApiProduct> GetAllProducts()
+        public ApiResponse GetAllProducts()
         {
             return AddOrGetExisting("allproducts", InitializeProductCache);
         }
