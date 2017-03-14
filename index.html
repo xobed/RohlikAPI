@@ -35,6 +35,7 @@
 <body>
     <form id="main" v-cloak>
         <input type="text" v-model="searchString" placeholder="Search.." />
+        <span>Last sync with Rohlik.cz: {{time}}</span>
         <div id="productList">
             <table>
                 <thead>
@@ -65,7 +66,8 @@
 
         data: {
             searchString: "",
-            products: null
+            products: null,
+            time: null
         },
 
         computed: {
@@ -93,10 +95,16 @@
         },
 
         methods: {
+            formatDate: function(dateString){
+                var date = new Date(dateString);
+                return date.getDate() + "." + date.getMonth() + "." + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes();
+            },
+
             fetchData: function () {
                 var self = this;
                 $.get(url, function (data) {
-                    self.products = data;
+                    self.products = data.Products;                    
+                    self.time = self.formatDate(data.SyncTime);
                 });
             }
         }
