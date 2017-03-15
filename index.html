@@ -28,15 +28,17 @@
         td {
             min-width: 120px;
             padding: 10px 20px;
-        }
+        }       
     </style>
 </head>
 
 <body>
-    <form id="main" v-cloak>
-        <input type="text" v-model="searchString" placeholder="Search.." />
-        <span>Last sync with Rohlik.cz: {{time}}</span>
-        <div id="productList">
+    <form id="main">
+        <div v-if="showLoader">Loading...</div>
+        <div v-else>
+            <input type="text" v-model="searchString" placeholder="Search.." />
+            <span>Last sync with Rohlik.cz: {{time}}</span>
+
             <table>
                 <thead>
                     <th>Name</th>
@@ -54,6 +56,7 @@
                 </tbody>
             </table>
         </div>
+
     </form>
 
 </body>
@@ -65,6 +68,7 @@
         el: '#main',
 
         data: {
+            showLoader: true,
             searchString: "",
             products: null,
             time: null
@@ -79,8 +83,8 @@
                     return productArray;
                 }
 
-                searchString = searchString.trim().toLowerCase();                
-                var regex = new RegExp(searchString);                
+                searchString = searchString.trim().toLowerCase();
+                var regex = new RegExp(searchString);
 
                 productArray = productArray.filter(function (item) {
                     if (regex.test(item.Sname)) {
@@ -96,16 +100,17 @@
         },
 
         methods: {
-            formatDate: function(dateString){
+            formatDate: function (dateString) {
                 var date = new Date(dateString);
-                return date.getDate() + "." + date.getMonth() + "." + date.getFullYear() + " " + ("0" + date.getHours()).slice(-2)  + ":" +  ("0" + date.getMinutes()).slice(-2);
+                return date.getDate() + "." + date.getMonth() + "." + date.getFullYear() + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2);
             },
 
             fetchData: function () {
                 var self = this;
                 $.get(url, function (data) {
-                    self.products = data.Products;                    
+                    self.products = data.Products;
                     self.time = self.formatDate(data.SyncTime);
+                    self.showLoader = !self.showLoader;
                 });
             }
         }
