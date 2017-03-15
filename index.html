@@ -79,10 +79,11 @@
                     return productArray;
                 }
 
-                searchString = searchString.trim().toLowerCase();
+                searchString = searchString.trim().toLowerCase();                
+                var regex = new RegExp(searchString);                
 
                 productArray = productArray.filter(function (item) {
-                    if (item.Sname.indexOf(searchString) !== -1) {
+                    if (regex.test(item.Sname)) {
                         return item;
                     }
                 })
@@ -97,7 +98,7 @@
         methods: {
             formatDate: function(dateString){
                 var date = new Date(dateString);
-                return date.getDate() + "." + date.getMonth() + "." + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes();
+                return date.getDate() + "." + date.getMonth() + "." + date.getFullYear() + " " + ("0" + date.getHours()).slice(-2)  + ":" +  ("0" + date.getMinutes()).slice(-2);
             },
 
             fetchData: function () {
