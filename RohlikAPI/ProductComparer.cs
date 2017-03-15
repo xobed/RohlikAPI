@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using RohlikAPI.Model;
 
 namespace RohlikAPI
@@ -7,12 +8,12 @@ namespace RohlikAPI
     {
         public bool Equals(Product x, Product y)
         {
-            return x.ProductUrl == y.ProductUrl;
+            return x.Name == y.Name && Math.Abs(x.Price - y.Price) < 0.01;
         }
 
         public int GetHashCode(Product product)
         {
-            return product.ProductUrl.GetHashCode();
+            return product.Name.GetHashCode();
         }
     }
 }
