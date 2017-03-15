@@ -75,7 +75,7 @@ namespace RohlikAPI
             product.Price = priceParser.ParsePrice(priceNode.InnerText);
 
             var pricePerUnitNode = productNode.SelectSingleNode(".//span[@class='grey font-13']");
-            var pricePerUnitString = pricePerUnitNode.InnerText.Trim('(',')');
+            var pricePerUnitString = pricePerUnitNode.InnerText.Trim().Trim('(',')');
 
             product.PricePerUnit = priceParser.ParsePrice(pricePerUnitString);
             product.Unit = pricePerUnitString.Split(new[] { "&nbsp;" }, StringSplitOptions.None).Last();
