@@ -23,5 +23,14 @@ namespace RohlikAPITests.Helpers
 
             Assert.IsTrue(price.Equals(1012.34));
         }
+
+        [TestMethod]
+        public void PriceParser_ParsesNbspPrice()
+        {
+            var parser = new PriceParser();
+            var price = parser.ParsePrice("1&nbsp;012,34&nbsp;Kč/Kg");
+
+            Assert.IsTrue(price.Equals(1012.34));
+        }
     }
 }

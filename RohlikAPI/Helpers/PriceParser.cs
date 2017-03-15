@@ -8,7 +8,7 @@ namespace RohlikAPI.Helpers
     {
         public double ParsePrice(string priceString)
         {
-            var priceStringWithoutSpaces = priceString.Replace(" ", "");
+            var priceStringWithoutSpaces = priceString.Replace(" ", "").Replace("&nbsp;","");
             var cleanPriceString = Regex.Match(priceStringWithoutSpaces, @"(\d*?,\d*)|(\d+)").Value;
             try
             {
