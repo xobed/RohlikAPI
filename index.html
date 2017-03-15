@@ -3,6 +3,8 @@
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.1/vue.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         table {
             border: 2px solid #42b983;
@@ -34,7 +36,7 @@
 
 <body>
     <form id="main">
-        <div v-if="showLoader">Loading...</div>
+        <div v-if="showLoader"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
         <div v-else>
             <input type="text" v-model="searchString" placeholder="Search.." />
             <span>Last sync with Rohlik.cz: {{time}}</span>
