@@ -38,7 +38,7 @@
     <form id="main">
         <div v-if="showLoader"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
         <div v-else>
-            <input type="text" v-model="searchString" placeholder="Search.." />
+            <input id="search" type="text" v-model="searchString" placeholder="Search.." />
             <input id="regexCheck" type="checkbox" name="regex" value="regex">regex search<br>
             <span>Last sync with Rohlik.cz: {{time}}</span>
 
@@ -86,19 +86,25 @@
                     return productArray;
                 }
 
+                var parameters = { search: searchString }
+                var parametersString = $.param(parameters);
+                var newLocation = location.protocol + '//' + location.host + location.pathname + "?" + parametersString;
+                history.pushState(newLocation, "", newLocation);
+
                 searchString = searchString.trim().toLowerCase();
 
-                if (document.getElementById('regexCheck').checked) {
-                    productArray = this.filterProductsRegex(productArray, searchString);
-                } else {
-                    productArray = this.filterProducts(productArray, searchString);
+                var checkedElement = document.getElementById('regexCheck');
+                if (checkedElement) {
+                    if (checkedElement.checked) {
+                        return this.filterProductsRegex(productArray, searchString);
+                    }
                 };
-
-                return productArray;
+                return this.filterProducts(productArray, searchString);
             }
         },
 
         created: function () {
+            this.setUrlFromParam();
             this.fetchData();
         },
 
@@ -117,6 +123,14 @@
                 });
             },
 
+            setUrlFromParam: function () {
+                var searchParam = window.location.search.substring(1).split("=")[1];                
+                if (searchParam) {
+                    var decodedSearchParam = decodeURIComponent(searchParam);
+                    this.searchString = decodedSearchParam;
+                };
+            },
+
             filterProductsRegex: function (productArray, searchString) {
                 var regex = new RegExp(searchString);
                 return productArray.filter(function (item) {
@@ -128,7 +142,7 @@
 
             filterProducts: function (productArray, searchString) {
                 var searchItems = searchString.split(" ");
-                var negativeItems = searchItems.filter(function (item) {                    
+                var negativeItems = searchItems.filter(function (item) {
                     return item.charAt(0) == '-' && item.length > 1;
                 });
 
@@ -141,15 +155,15 @@
                 });
 
 
-                function isValid(item) {      
+                function isValid(item) {
                     var negativeFound = false;
                     for (i = 0; i < negativeItems.length; i++) {
-                        if (item.Sname.indexOf(negativeItems[i]) !== -1){
-                            negativeFound = true;                            
+                        if (item.Sname.indexOf(negativeItems[i]) !== -1) {
+                            negativeFound = true;
                             break;
                         };
-                    }                    
-                    if (negativeFound){
+                    }
+                    if (negativeFound) {
                         return false;
                     }
                     var count = 0;
