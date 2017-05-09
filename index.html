@@ -26,6 +26,10 @@
             background-color: #f9f9f9;
         }
 
+        .imagetd {
+            text-align: center;
+        }
+
         th,
         td {
             min-width: 120px;
@@ -55,7 +59,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="product in filteredProducts">
-                        <td><img v-bind:src="product.Img"></td>
+                        <td class="imagetd"><img v-bind:src="product.Img"></td>
                         <td><a v-bind:href="product.Href">{{product.Name}}</a></td>
                         <td>{{product.Price}}</td>
                         <td>{{product.PPU}}</td>
