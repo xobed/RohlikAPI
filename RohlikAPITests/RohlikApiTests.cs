@@ -23,6 +23,7 @@ namespace RohlikAPITests
             Assert.IsTrue(product.Price > 0, $"Product {product.Name} does not have price");
             Assert.IsTrue(product.PricePerUnit > 0, $"Product {product.Name} does not have price per unit");
             Assert.IsFalse(string.IsNullOrEmpty(product.Unit), $"Product {product.Name} does not have unit text");
+            Assert.IsFalse(string.IsNullOrEmpty(product.ImageUrl), $"Product {product.Name} does not have image url");
             Assert.IsFalse(product.Unit.Contains("(") || product.Unit.Contains(")"), $"Product {product.Name} - unit contains unexpected characters - '{product.Unit}'");
 
             if (isDiscounted)

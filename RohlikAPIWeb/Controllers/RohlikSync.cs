@@ -11,7 +11,7 @@ namespace RohlikAPIWeb.Controllers
         {
             var api = new RohlikApi(City.Brno);
             var products = api.GetAllProducts().ToList();
-            var apiProducts = products.Select(p => new ApiProduct(p.Name, p.Price, p.PricePerUnit, p.Unit, p.ProductUrl)).OrderBy(p => p.PPU);
+            var apiProducts = products.Select(p => new ApiProduct(p.Name, p.Price, p.PricePerUnit, p.Unit, p.ProductUrl, p.ImageUrl)).OrderBy(p => p.PPU);
             var response = new ApiResponse(DateTime.UtcNow, apiProducts);
             return response;
         }

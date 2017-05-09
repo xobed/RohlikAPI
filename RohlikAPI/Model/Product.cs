@@ -1,4 +1,5 @@
 ﻿using System;
+using HtmlAgilityPack;
 
 namespace RohlikAPI.Model
 {
@@ -12,5 +13,6 @@ namespace RohlikAPI.Model
         public double? OriginalPrice { get; set; }
         public DateTime? DiscountedUntil { get; set; }
         public string ProductUrl { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

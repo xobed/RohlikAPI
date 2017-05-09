@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text;
 
 namespace RohlikAPIWeb.Models
@@ -13,8 +11,9 @@ namespace RohlikAPIWeb.Models
         public string Unit { get; }
         public string Sname { get; }
         public string Href { get; }
+        public string Img { get; }
 
-        public ApiProduct(string name, double price, double ppu, string unit, string href)
+        public ApiProduct(string name, double price, double ppu, string unit, string href, string image)
         {
             Name = name;
             Price = price;
@@ -22,6 +21,7 @@ namespace RohlikAPIWeb.Models
             Unit = unit;
             Href = href;
             Sname = StandardizeString(name);
+            Img = image;
         }
 
         private string StandardizeString(string str)
