@@ -13,7 +13,7 @@ namespace RohlikAPIWeb.Models
         public string Href { get; }
         public string Img { get; }
 
-        public ApiProduct(string name, double price, double ppu, string unit, string href, string image)
+        public ApiProduct(string name, double price, double ppu, string unit, string href, string img)
         {
             Name = name;
             Price = price;
@@ -21,7 +21,7 @@ namespace RohlikAPIWeb.Models
             Unit = unit;
             Href = href;
             Sname = StandardizeString(name);
-            Img = image;
+            Img = img;
         }
 
         private string StandardizeString(string str)

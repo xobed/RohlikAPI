@@ -29,6 +29,7 @@ namespace RohlikAPIWebTests.Controllers
             Assert.IsFalse(string.IsNullOrEmpty(product.Href));
             Assert.IsFalse(string.IsNullOrEmpty(product.Sname));
             Assert.IsFalse(string.IsNullOrEmpty(product.Unit));
+            Assert.IsFalse(string.IsNullOrEmpty(product.Img));
 
             Assert.IsTrue(product.Price > 0);
             Assert.IsTrue(product.PPU > 0);
