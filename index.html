@@ -16,16 +16,16 @@
             font-weight: 300;
             font-style: normal;
         }
-        
+
         th {
             background-color: #90ba41;
             color: rgba(255, 255, 255, 0.66);
         }
-        
+
         td {
             background-color: #f9f9f9;
         }
-        
+
         th,
         td {
             min-width: 120px;
@@ -38,12 +38,16 @@
     <form id="main">
         <div v-if="showLoader"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
         <div v-else>
-            <input id="search" type="text" v-model="searchString" placeholder="Search.." />
-            <input id="regexCheck" type="checkbox" name="regex" value="regex">regex search<br>
-            <span>Last sync with Rohlik.cz: {{time}}</span>
+            <div>
+                <input id="search" type="text" v-model="searchString" placeholder="Search.." />
+                <input id="regexCheck" type="checkbox" name="regex" value="regex">regex search
+                <i title="&#13;Only first 100 products are displayed for any search query." class="fa fa-question-circle" aria-hidden="true"></i>
+            </div>
+            <div>Last sync with Rohlik.cz: {{time}}</div>
 
             <table>
                 <thead>
+                    <th>Image</th>
                     <th>Name</th>
                     <th>Price</th>
                     <th>Price per unit</th>
@@ -51,6 +55,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="product in filteredProducts">
+                        <td><img v-bind:src="product.Img"></td>
                         <td><a v-bind:href="product.Href">{{product.Name}}</a></td>
                         <td>{{product.Price}}</td>
                         <td>{{product.PPU}}</td>
@@ -83,7 +88,7 @@
                 var searchString = this.searchString;
 
                 if (!searchString) {
-                    return productArray;
+                    return productArray.slice(0, 100);
                 }
 
                 var parameters = { search: searchString }
@@ -124,7 +129,7 @@
             },
 
             setUrlFromParam: function () {
-                var searchParam = window.location.search.substring(1).split("=")[1];                
+                var searchParam = window.location.search.substring(1).split("=")[1];
                 if (searchParam) {
                     var decodedSearchParam = decodeURIComponent(searchParam);
                     this.searchString = decodedSearchParam;
@@ -177,7 +182,7 @@
                     };
                 }
 
-                return productArray.filter(isValid, negativeItems, positiveItems);
+                return productArray.filter(isValid, negativeItems, positiveItems).slice(0, 100);
             }
         }
     });
