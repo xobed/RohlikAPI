@@ -69,7 +69,10 @@ namespace RohlikAPI
             product.Name = aNode.InnerText.Trim();
 
             var imageNode = productNode.SelectSingleNode("div/header/a/img");
-            product.ImageUrl = imageNode.Attributes["data-replace"].Value;
+            var imageUrlLarge = imageNode.Attributes["data-replace"].Value;
+            var imageUrlSmall = imageUrlLarge.Replace("260.jpg", "160.jpg");
+
+            product.ImageUrl = imageUrlSmall;
 
             const string rohlikUrl = "https://rohlik.cz";
             product.ProductUrl = $"{rohlikUrl}{aNode.Attributes["href"].Value}";
