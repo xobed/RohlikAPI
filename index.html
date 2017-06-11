@@ -58,7 +58,8 @@
                     <th>Name</th>
                     <th>Price CZK</th>
                     <th>Price per unit</th>
-                    <th>Unit</th>
+                    <th>Size (Approximate)</th>
+                    <th>Unit</th>                    
                 </thead>
                 <tbody>
                     <tr v-for="product in filteredProducts">
@@ -66,6 +67,7 @@
                         <td><a v-bind:href="product.Href">{{product.Name}}</a></td>
                         <td>{{product.Price}}</td>
                         <td>{{product.PPU}}</td>
+                        <td>{{product.Size}}</td>
                         <td>{{product.Unit}}</td>
                     </tr>
                 </tbody>
@@ -130,6 +132,10 @@
                 var self = this;
                 $.get(url, function (data) {
                     self.products = data.Products;
+                    self.products.forEach(function(item) {
+                        item.Size = Math.ceil(item.Price / item.PPU);
+                    }, this);
+
                     self.time = self.formatDate(data.SyncTime);
                     self.showLoader = !self.showLoader;
                 });
