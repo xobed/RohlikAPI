@@ -1,13 +1,13 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RohlikAPIWeb.Controllers;
+using RohlikAPIWeb;
 using RohlikAPIWeb.Models;
 
 namespace RohlikAPIWebTests.Controllers
 {
-    [TestClass()]
+    [TestClass]
     public class RohlikSyncTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void CreateApiResponseTest()
         {
             var sync = new RohlikSync();

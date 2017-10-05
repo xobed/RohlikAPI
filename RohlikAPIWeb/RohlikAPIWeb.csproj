@@ -25,6 +25,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <ApplicationInsightsResourceId>/subscriptions/1297f74c-6e16-4e71-941f-d2a07a48ee66/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/RohlikAPIWeb</ApplicationInsightsResourceId>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -118,7 +119,7 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Cache\FileSystemCache.cs" />
-    <Compile Include="Controllers\RohlikSync.cs" />
+    <Compile Include="RohlikSync.cs" />
     <Compile Include="Models\ApiProduct.cs" />
     <Compile Include="Cache\ResponseCache.cs" />
     <Compile Include="Controllers\RohlikController.cs" />
