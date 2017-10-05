@@ -77,22 +77,22 @@ namespace RohlikAPI
             const string rohlikUrl = "https://rohlik.cz";
             product.ProductUrl = $"{rohlikUrl}{aNode.Attributes["href"].Value}";
 
-            var priceNode = productNode.SelectSingleNode(".//div[contains(@class,'tac')]/strong");
+            var priceNode = productNode.SelectSingleNode(".//div[contains(@class,'tac')]/div/strong");
             product.Price = priceParser.ParsePrice(priceNode.InnerText);
 
-            var pricePerUnitNode = productNode.SelectSingleNode(".//span[@class='grey font-13']");
+            var pricePerUnitNode = productNode.SelectSingleNode(".//span[@class='grey font-11']/text()");
             var pricePerUnitString = pricePerUnitNode.InnerText.Trim().Trim('(',')');
 
             product.PricePerUnit = priceParser.ParsePrice(pricePerUnitString);
             product.Unit = pricePerUnitString.Split(new[] { "&nbsp;" }, StringSplitOptions.None).Last();
 
-            var discountPriceNode = productNode.SelectSingleNode(".//div[@class='action tac']/del");
+            var discountPriceNode = productNode.SelectSingleNode(".//span[@class='grey font-11']/del");
 
             if (discountPriceNode != null)
             {
                 product.IsDiscounted = true;
                 product.OriginalPrice = priceParser.ParsePrice(discountPriceNode.InnerText);
-                var dateTimeNode = productNode.SelectSingleNode(".//div[@class='circle']/span");
+                var dateTimeNode = productNode.SelectSingleNode(".//div[@class='action-red action font-13']");
                 if (dateTimeNode != null)
                 {
                     product.DiscountedUntil = GetDateUntilDiscounted(dateTimeNode);
@@ -136,7 +136,7 @@ namespace RohlikAPI
             catch (FormatException ex)
             {
                 // Some products are marked as discounted, but do not show discounted until
-                if (dateTimeString.Contains("Výhodnácena"))
+                if (dateTimeString.Contains("Trvalevýhodnácena"))
                 {
                     return null;
                 }

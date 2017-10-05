@@ -42,7 +42,7 @@ namespace RohlikAPITests
             Assert.IsTrue(products.Any(), "Failed to get any products");
 
             // At least some products have discounted until
-            Assert.IsTrue(products.Any(p => p.DiscountedUntil != null));
+            Assert.IsTrue(products.Any(p => p.DiscountedUntil != null), "No products with discount expiration found");
             Assert.IsTrue(products.All(p => p.IsDiscounted), $"Found some products without discount: {string.Join(",", products.Where(p => !p.IsDiscounted).Select(p => p.Name).ToList())}");
             products.ForEach(p => VerifyProduct(p, true));
         }
