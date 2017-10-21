@@ -8,9 +8,8 @@ namespace RohlikAPI
     public class RohlikApi
     {
         protected PersistentSessionHttpClient HttpSessionClient;
-        private readonly City city;
 
-        protected virtual PersistentSessionHttpClient HttpClient => HttpSessionClient ?? CreateHttpClient();
+        protected virtual PersistentSessionHttpClient HttpClient => HttpSessionClient;
 
         internal RohlikApi()
         {
@@ -18,15 +17,20 @@ namespace RohlikAPI
 
         public RohlikApi(City city)
         {
-            this.city = city;
+            HttpSessionClient = CreateHttpClient(city.Address);
         }
 
-        protected virtual PersistentSessionHttpClient CreateHttpClient()
+        public RohlikApi(string address)
+        {
+            HttpSessionClient = CreateHttpClient(address);
+        }
+
+        protected PersistentSessionHttpClient CreateHttpClient(string address)
         {
             var setAddressForm = new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>("do", "addressPopup-form-submit"),
-                new KeyValuePair<string, string>("address", city.Address)
+                new KeyValuePair<string, string>("address", address)
             };
 
             var setCityUrl = "https://www.rohlik.cz/";
@@ -35,11 +39,10 @@ namespace RohlikAPI
 
             var response = httpSessionClient.Post(setCityUrl, setAddressForm);
             var responseContent = response.Content.ReadAsStringAsync().Result;
-            if (!responseContent.Contains(city.Address))
+            if (!responseContent.Contains(address))
             {
-                throw new WebException($"Failed to set address '{city.Address}' for Rohlik client");
+                throw new WebException($"Failed to set address '{address}' for Rohlik client");
             }
-            HttpSessionClient = httpSessionClient;
 
             return httpSessionClient;
         }
