@@ -22,7 +22,7 @@ namespace RohlikAPI
             var rohlikFrontDocument = new HtmlDocument();
             rohlikFrontDocument.LoadHtml(rohlikFrontString);
 
-            var categoryNodes = rohlikFrontDocument.DocumentNode.SelectNodes("//div[@data-menu-id='sortiment']//div[contains(@class,'rootcat')]/div/a");
+            var categoryNodes = rohlikFrontDocument.DocumentNode.SelectNodes("//div[contains(@class,'sortiment')]//div[contains(@class,'rootcat')]/div/a");
             var categoryHrefs = categoryNodes.Select(c => c.Attributes["href"].Value);
             foreach (var categoryHref in categoryHrefs)
             {

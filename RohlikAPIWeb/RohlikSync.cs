@@ -3,7 +3,7 @@ using System.Linq;
 using RohlikAPI;
 using RohlikAPIWeb.Models;
 
-namespace RohlikAPIWeb.Controllers
+namespace RohlikAPIWeb
 {
     public class RohlikSync
     {

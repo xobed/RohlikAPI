@@ -42,7 +42,7 @@ namespace RohlikAPITests
             Assert.IsTrue(products.Any(), "Failed to get any products");
 
             // At least some products have discounted until
-            Assert.IsTrue(products.Any(p => p.DiscountedUntil != null));
+            Assert.IsTrue(products.Any(p => p.DiscountedUntil != null), "No products with discount expiration found");
             Assert.IsTrue(products.All(p => p.IsDiscounted), $"Found some products without discount: {string.Join(",", products.Where(p => !p.IsDiscounted).Select(p => p.Name).ToList())}");
             products.ForEach(p => VerifyProduct(p, true));
         }
@@ -67,8 +67,11 @@ namespace RohlikAPITests
         [TestMethod]
         public void GetMainCategory()
         {
+            const string testCategory = "c300101000-pekarna-a-cukrarna";
+
             var api = new RohlikApi(City.Brno);
-            var result = api.GetProducts("c300101000-pekarna-a-cukrarna").ToList();
+            var result = api.GetProducts(testCategory).ToList();
+            Assert.IsTrue(result.Any(p => p.IsDiscounted), $"No discounted products found in category {testCategory}. Expected to find at least 1 discounted in non-discounted category");
             VerifyNonDiscountedProducts(result);
         }
 
