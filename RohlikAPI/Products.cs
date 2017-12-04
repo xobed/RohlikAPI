@@ -50,7 +50,7 @@ namespace RohlikAPI
 
         private IEnumerable<Product> ParseProducts(HtmlDocument document)
         {
-            var productNodes = document.DocumentNode.SelectNodes(@"//*[@class='product__grid_wrapper']/div[contains(@class,'base_product')]//div[@class='product__wrapper']");
+            var productNodes = document.DocumentNode.SelectNodes(@"//*[@class='product__grid_wrapper']/div[contains(@class,'base_product')]/article/div/div[contains(@class,'product__order')]");
             var parsedProducts = productNodes.Select(GetProductFromNode).Where(p => p != null);            
             return parsedProducts;
         }
@@ -68,7 +68,7 @@ namespace RohlikAPI
 
             product.Name = aNode.InnerText.Trim();
 
-            var imageNode = productNode.SelectSingleNode("div/header/a/img");
+            var imageNode = productNode.SelectSingleNode(".//header/a/img");
             var imageUrlLarge = imageNode.Attributes["data-replace"].Value;
             var imageUrlSmall = imageUrlLarge.Replace("260.jpg", "160.jpg");
 
