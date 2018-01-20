@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
@@ -66,7 +67,8 @@ namespace RohlikAPI
 
             var aNode = productNode.SelectSingleNode(".//div/h3/a");
 
-            product.Name = aNode.InnerText.Trim();
+            var rawName = aNode.InnerText.Trim();
+            product.Name = WebUtility.HtmlDecode(rawName);
 
             var imageNode = productNode.SelectSingleNode(".//header/a/img");
             var imageUrlLarge = imageNode.Attributes["data-replace"].Value;
