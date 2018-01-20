@@ -51,7 +51,7 @@ namespace RohlikAPI
         private IEnumerable<Product> ParseProducts(HtmlDocument document)
         {
             var productNodes = document.DocumentNode.SelectNodes(@"//*[@class='product__grid_wrapper']/div[contains(@class,'base_product')]/article/div/div[contains(@class,'product__order')]");
-            var parsedProducts = productNodes.Select(GetProductFromNode).Where(p => p != null);            
+            var parsedProducts = productNodes.Select(GetProductFromNode).Where(p => p != null);
             return parsedProducts;
         }
 
@@ -77,7 +77,7 @@ namespace RohlikAPI
             const string rohlikUrl = "https://rohlik.cz";
             product.ProductUrl = $"{rohlikUrl}{aNode.Attributes["href"].Value}";
 
-            var priceNode = productNode.SelectSingleNode(".//div[contains(@class,'tac')]/div/strong");
+            var priceNode = productNode.SelectSingleNode(".//div/strong[contains(@class,'font-15')]");
             product.Price = priceParser.ParsePrice(priceNode.InnerText);
 
             var pricePerUnitNode = productNode.SelectSingleNode(".//span[@class='grey font-11']/text()");
