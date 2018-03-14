@@ -24,8 +24,8 @@
         }
 
         td {
-            background-color: #f9f9f9;            
-        }       
+            background-color: #f9f9f9;
+        }
 
         .imagetd {
             text-align: center;
@@ -59,7 +59,7 @@
                     <th>Price CZK</th>
                     <th>Price per unit</th>
                     <th>Size (Approximate)</th>
-                    <th>Unit</th>                    
+                    <th>Unit</th>
                 </thead>
                 <tbody>
                     <tr v-for="product in filteredProducts">
@@ -134,7 +134,7 @@
                 $.get(url, function (data) {
                     self.products = data.Products;
                     self.products.forEach(function(item) {
-                        item.Size = Math.ceil(item.Price / item.PPU);
+                        item.Size = (item.Price / item.PPU).toFixed(2);
                     }, this);
 
                     self.time = self.formatDate(data.SyncTime);
