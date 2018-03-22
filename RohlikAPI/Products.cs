@@ -138,7 +138,7 @@ namespace RohlikAPI
             catch (FormatException ex)
             {
                 // Some products are marked as discounted, but do not show discounted until
-                if (dateTimeString.Contains("Trvalevýhodnácena"))
+                if (dateTimeString.ToLower().Contains("výhodnácena"))
                 {
                     return null;
                 }
