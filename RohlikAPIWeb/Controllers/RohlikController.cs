@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -19,6 +20,16 @@ namespace RohlikAPIWeb.Controllers
         public ApiResponse Get()
         {
             return Cache.GetAllProducts();
+        }
+
+        [HttpGet]
+        [Route("api/GetAllProductsAge")]
+        public int GetProductsAgeHours()
+        {
+            var lastSyncTime = Cache.GetAllProducts().SyncTime;
+            TimeSpan diff = DateTime.UtcNow - lastSyncTime;
+            var hours = (int) diff.TotalHours;
+            return hours;
         }
 
         [HttpGet]
