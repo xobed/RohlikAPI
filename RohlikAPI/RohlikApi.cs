@@ -17,20 +17,21 @@ namespace RohlikAPI
 
         public RohlikApi(City city)
         {
-            HttpSessionClient = CreateHttpClient(city.Address);
+            HttpSessionClient = CreateHttpClient(city.Street, city.CityName);
         }
 
-        public RohlikApi(string address)
+        public RohlikApi(string street, string city)
         {
-            HttpSessionClient = CreateHttpClient(address);
+            HttpSessionClient = CreateHttpClient(street, city);
         }
 
-        protected PersistentSessionHttpClient CreateHttpClient(string address)
+        protected PersistentSessionHttpClient CreateHttpClient(string street, string city)
         {
             var setAddressForm = new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>("do", "addressPopup-form-submit"),
-                new KeyValuePair<string, string>("address", address)
+                new KeyValuePair<string, string>("street", street),
+                new KeyValuePair<string, string>("city", city)
             };
 
             var setCityUrl = "https://www.rohlik.cz/";
@@ -39,9 +40,10 @@ namespace RohlikAPI
 
             var response = httpSessionClient.Post(setCityUrl, setAddressForm);
             var responseContent = response.Content.ReadAsStringAsync().Result;
-            if (!responseContent.Contains(address))
+            // This is set to non-null if posting address is successful and address is valid for deliveries
+            if (responseContent.Contains("\"addressCity\":null"))
             {
-                throw new WebException($"Failed to set address '{address}' for Rohlik client");
+                throw new WebException($"Failed to set address '{street} - {city}' for Rohlik client");
             }
 
             return httpSessionClient;

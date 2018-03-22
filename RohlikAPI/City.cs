@@ -2,13 +2,15 @@
 {
     public class City
     {
-        private City(string address)
+        private City(string street, string city)
         {
-            Address = address;
+            Street = street;
+            CityName = city;
         }
 
-        public string Address { get; set; }
-        public static City Brno => new City("Česká 161/1, Brno 60200");
-        public static City Praha => new City("Václavské náměstí 846/1, Praha 11000");
+        public string Street { get; set; }
+        public string CityName { get; set; }
+        public static City Brno => new City("Česká 161/1", "Brno");
+        public static City Praha => new City("Václavské náměstí 846/1", "Praha");
     }
 }
