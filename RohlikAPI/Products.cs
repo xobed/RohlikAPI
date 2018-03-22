@@ -142,7 +142,7 @@ namespace RohlikAPI
                 {
                     return null;
                 }
-                throw new FormatException($"Failed to parse datetime string: {dateTimeString}. Ex: {ex}");
+                throw new FormatException($"Failed to parse datetime string: '{dateTimeString}'. Ex: {ex}");
             }
         }
 
