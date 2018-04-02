@@ -4,6 +4,9 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.ApplicationInsights.Extensibility;
 using RohlikAPIWeb.Cache;
 using RohlikAPIWeb.Models;
 
@@ -14,6 +17,7 @@ namespace RohlikAPIWeb.Controllers
         private static readonly ResponseCache Cache = new ResponseCache();
         private static readonly FileSystemCache FileSystemCache = new FileSystemCache();
         private static readonly RohlikSync RohlikSync = new RohlikSync();
+        private readonly TelemetryClient _telemetryClient = new TelemetryClient(TelemetryConfiguration.Active);
 
         [HttpGet]
         [Route("api/GetAllProducts")]
@@ -42,14 +46,30 @@ namespace RohlikAPIWeb.Controllers
                 return new StatusCodeResult(HttpStatusCode.Unauthorized, Request);
             }
 
-            Task.Run(() =>
+            Task.Run(() => UpdateProductsTask());
+            return Ok();
+        }
+
+        private void UpdateProductsTask()
+        {
+            var operation = _telemetryClient.StartOperation<RequestTelemetry>("UpdateProducts");
+
+            try
             {
                 var response = RohlikSync.CreateApiResponse();
                 FileSystemCache.SetProductCache(response);
                 Cache.SetProductCache(response);
-            });
-            
-            return Ok();
+            }
+            catch (Exception e)
+            {
+                _telemetryClient.TrackException(e);
+                Console.WriteLine(e);
+                throw;
+            }
+            finally
+            {
+                _telemetryClient.StopOperation(operation);
+            }
         }
     }
 }
