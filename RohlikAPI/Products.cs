@@ -164,7 +164,7 @@ namespace RohlikAPI
             return allProductsString;
         }
 
-        private ProductResponse GetProductsForPage(string category, int page, string baseUrl)
+        private string GetProductsForPageString(string category, int page, string baseUrl)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, $"{baseUrl}{category}");
             request.Headers.Add("X-Requested-With", "XMLHttpRequest");
@@ -174,11 +174,27 @@ namespace RohlikAPI
                 new KeyValuePair<string, string>("do", "paginator-loadMore"),
                 new KeyValuePair<string, string>("paginator-page", page.ToString())
             };
+            return httpClient.Get(request, parameters.ToArray());
+        }
 
-            var stringResponse = httpClient.Get(request, parameters.ToArray());
-            var result = JsonConvert.DeserializeObject<ProductResponse>(stringResponse);
+        private ProductResponse GetProductsForPage(string category, int page, string baseUrl)
+        {
+            int retriesLeft = 5;
+            const string errorResponse = "{\"error\":true}";
+            string stringResponse = errorResponse;
 
-            return result;
+            while (retriesLeft > 0 && (stringResponse == errorResponse || stringResponse == String.Empty))
+            {
+                stringResponse = GetProductsForPageString(category, page, baseUrl);
+                var result = JsonConvert.DeserializeObject<ProductResponse>(stringResponse);
+                if (result?.ProductSnippets != null)
+                {
+                    return result;
+                }
+
+                retriesLeft--;
+            }
+            throw new Exception($"Failed to get products for page {page} of category {category}");
         }
 
         private string CleanProductResults(string productString)
