@@ -47,7 +47,7 @@
         <div v-else>
             <div>
                 <input id="search" type="text" v-model="searchString" placeholder="Search.." />
-                <input id="regexCheck" type="checkbox" name="regex" value="regex">regex search
+                <input v-model="regex" type="checkbox" name="regex" value="regex">regex search
                 <i title="&#13;Only first 100 products are displayed for any search query." class="fa fa-question-circle" aria-hidden="true"></i>
             </div>
             <div>Last sync with Rohlik.cz: {{time}}</div>
@@ -88,7 +88,8 @@
             showLoader: true,
             searchString: "",
             products: null,
-            time: null
+            time: null,
+            regex: false
         },
 
         computed: {
@@ -107,12 +108,9 @@
 
                 searchString = searchString.trim().toLowerCase();
 
-                var checkedElement = document.getElementById('regexCheck');
-                if (checkedElement) {
-                    if (checkedElement.checked) {
-                        return this.filterProductsRegex(productArray, searchString);
-                    }
-                };
+                if (this.regex) {
+                    return this.filterProductsRegex(productArray, searchString);
+                }
                 return this.filterProducts(productArray, searchString);
             }
         },
@@ -156,7 +154,7 @@
                     if (regex.test(item.Sname)) {
                         return item;
                     }
-                })
+                }).slice(0, 100);
             },
 
             filterProducts: function (productArray, searchString) {
