@@ -15,7 +15,6 @@ namespace RohlikAPIWeb.Controllers
     public class RohlikController : ApiController
     {
         private static readonly ResponseCache Cache = new ResponseCache();
-        private static readonly FileSystemCache FileSystemCache = new FileSystemCache();
         private static readonly RohlikSync RohlikSync = new RohlikSync();
         private readonly TelemetryClient _telemetryClient = new TelemetryClient(TelemetryConfiguration.Active);
 
@@ -57,7 +56,6 @@ namespace RohlikAPIWeb.Controllers
             try
             {
                 var response = RohlikSync.CreateApiResponse();
-                FileSystemCache.SetProductCache(response);
                 Cache.SetProductCache(response);
             }
             catch (Exception e)

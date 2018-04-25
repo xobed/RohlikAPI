@@ -7,11 +7,11 @@ namespace RohlikAPIWeb.Cache
     public class ResponseCache
     {
         private static readonly MemoryCache Cache = MemoryCache.Default;
-        private readonly FileSystemCache fileSystemCache = new FileSystemCache();
+        private static readonly FileSystemCache FileSystemCache = new FileSystemCache();
 
         private ApiResponse InitializeProductCache()
         {
-            var apiResponse = fileSystemCache.GetAllProducts();
+            var apiResponse = FileSystemCache.GetAllProducts();
             if (apiResponse == null)
             {
                 throw new Exception("Failed to get products from file system cache. Products need to be initialized by calling UpdateProducts.");
@@ -43,6 +43,7 @@ namespace RohlikAPIWeb.Cache
         public void SetProductCache(ApiResponse response)
         {
             Cache.Set("allproducts", response, DateTime.Now.AddMinutes(30));
+            FileSystemCache.SetProductCache(response);
         }
     }
 }
