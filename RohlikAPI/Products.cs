@@ -110,8 +110,8 @@ namespace RohlikAPI
 
         private bool IsSoldOut(HtmlNode productNode)
         {
-            var soldOutMessageNode = productNode.SelectSingleNode(".//div[@class='product__unavailable']");
-            return soldOutMessageNode != null;
+            const string notAvailableClass = "--not-available";
+            return productNode.InnerHtml.Contains(notAvailableClass);
         }
 
         private DateTime? GetDateUntilDiscounted(HtmlNode dateTimeNode)
