@@ -14,5 +14,6 @@ namespace RohlikAPI.Model
         public DateTime? DiscountedUntil { get; set; }
         public string ProductUrl { get; set; }
         public string ImageUrl { get; set; }
+        public bool IsSoldOut { get; set; }
     }
 }

@@ -29,8 +29,25 @@ namespace RohlikAPI
 
         internal IEnumerable<Product> Get(string category)
         {
-            var allProductsString = GetAllProductsString(category, BaseUrl);
-            return GetProductsFromHtmlString(allProductsString);
+            List<Product> products;
+            var categoryId = GetCategoryId(category);
+            if (categoryId > 0)
+            {
+                var rohlikProducts = GetProductsForCategoryViaFrontendService(categoryId, BaseUrl);
+                products = GetProductsFromRohlikProducts(rohlikProducts).ToList();
+            }
+            else
+            {
+                var allProductsString = GetAllProductsString(category, BaseUrl);
+                products = GetProductsFromHtmlString(allProductsString).ToList();
+            }
+
+            if (products.Count == 0)
+            {
+                throw new RohlikApiException($"Failed to find any products for category {category}");
+            }
+
+            return products;
         }
 
         internal IEnumerable<Product> Search(string searchString)
@@ -49,6 +66,36 @@ namespace RohlikAPI
             return parsedProducts;
         }
 
+
+        private Product GetProductFromRohlikProduct(RohlikProduct rohlikProduct)
+        {
+            var product = new Product
+            {
+                Name = rohlikProduct.ProductName,
+                Price = rohlikProduct.Price,
+                PricePerUnit = rohlikProduct.PricePerUnit,
+                ProductUrl = $"{BaseUrl}{rohlikProduct.BaseLink}",
+                IsSoldOut = rohlikProduct.InStock == false,
+                ImageUrl = rohlikProduct.ImgPath.Replace("260.jpg", "160.jpg"),
+                Unit = rohlikProduct.Unit
+            };
+            var nonExpirationSales = rohlikProduct.Sales.FirstOrDefault(s => s.Type == SaleType.Sale);
+            product.IsDiscounted = rohlikProduct.GoodPrice | (nonExpirationSales != null);
+
+            if (nonExpirationSales != null)
+            {
+                product.DiscountedUntil = nonExpirationSales.EndsAtDateTime;
+                product.OriginalPrice = nonExpirationSales.OriginalPrice;
+            }
+
+            return product;
+        }
+
+        private IEnumerable<Product> GetProductsFromRohlikProducts(IEnumerable<RohlikProduct> productList)
+        {
+            return productList.Select(GetProductFromRohlikProduct);
+        }
+
         private IEnumerable<Product> ParseProducts(HtmlDocument document)
         {
             var productNodes = document.DocumentNode.SelectNodes(@"//*[@class='product__grid_wrapper']/div[contains(@class,'base_product')]/article/div/div[contains(@class,'product__order')]");
@@ -58,11 +105,16 @@ namespace RohlikAPI
 
         private Product GetProductFromNode(HtmlNode productNode)
         {
-            if (productNode == null) throw new ArgumentNullException(nameof(productNode));
+            if (productNode == null)
+            {
+                throw new ArgumentNullException(nameof(productNode));
+            }
+
             if (IsSoldOut(productNode))
             {
                 return null;
             }
+
             var product = new Product();
 
             var aNode = productNode.SelectSingleNode(".//div/h3/a");
@@ -83,10 +135,10 @@ namespace RohlikAPI
             product.Price = priceParser.ParsePrice(priceNode.InnerText);
 
             var pricePerUnitNode = productNode.SelectSingleNode(".//span[@class='grey font-11']/text()");
-            var pricePerUnitString = pricePerUnitNode.InnerText.Trim().Trim('(',')');
+            var pricePerUnitString = pricePerUnitNode.InnerText.Trim().Trim('(', ')');
 
             product.PricePerUnit = priceParser.ParsePrice(pricePerUnitString);
-            product.Unit = pricePerUnitString.Split(new[] { "&nbsp;" }, StringSplitOptions.None).Last();
+            product.Unit = pricePerUnitString.Split(new[] {"&nbsp;"}, StringSplitOptions.None).Last();
 
             var discountPriceNode = productNode.SelectSingleNode(".//span[@class='grey font-11']/del");
 
@@ -98,7 +150,7 @@ namespace RohlikAPI
                 if (dateTimeNode != null)
                 {
                     product.DiscountedUntil = GetDateUntilDiscounted(dateTimeNode);
-                }                
+                }
             }
             else
             {
@@ -120,11 +172,12 @@ namespace RohlikAPI
             {
                 throw new ArgumentNullException(nameof(dateTimeNode));
             }
+
             var dateTimeString = dateTimeNode.InnerText;
             dateTimeString = dateTimeString.Replace("Akce do ", "");
             dateTimeString = Regex.Replace(dateTimeString, @"\s", "");
             dateTimeString += currentDate.Year;
-            
+
             try
             {
                 var dateTime = DateTime.Parse(dateTimeString, new CultureInfo("cs-CZ"));
@@ -133,6 +186,7 @@ namespace RohlikAPI
                 {
                     dateTime = dateTime.AddYears(1);
                 }
+
                 return dateTime;
             }
             catch (FormatException ex)
@@ -142,6 +196,7 @@ namespace RohlikAPI
                 {
                     return null;
                 }
+
                 throw new FormatException($"Failed to parse datetime string: '{dateTimeString}'. Ex: {ex}");
             }
         }
@@ -183,7 +238,7 @@ namespace RohlikAPI
             const string errorResponse = "{\"error\":true}";
             string stringResponse = errorResponse;
 
-            while (retriesLeft > 0 && (stringResponse == errorResponse || stringResponse == String.Empty))
+            while (retriesLeft > 0 && (stringResponse == errorResponse || stringResponse == string.Empty))
             {
                 stringResponse = GetProductsForPageString(category, page, baseUrl);
                 var result = JsonConvert.DeserializeObject<ProductResponse>(stringResponse);
@@ -194,12 +249,37 @@ namespace RohlikAPI
 
                 retriesLeft--;
             }
+
             throw new Exception($"Failed to get products for page {page} of category {category}");
+        }
+
+        private long GetCategoryId(string category)
+        {
+            var digitString = new string(category.Where(char.IsDigit).ToArray());
+            if (digitString.Length == 0)
+            {
+                return 0;
+            }
+
+            long categoryId = long.Parse(digitString);
+            return categoryId;
+        }
+
+        private List<RohlikProduct> GetProductsForCategoryViaFrontendService(long categoryId, string baseUrl)
+        {
+            var url = $"{baseUrl}services/frontend-service/products/{categoryId}?offset=0&limit=100000";
+            var response = httpClient.Get(url);
+
+            var decoded = JsonConvert.DeserializeObject<ProductResponseJson>(response);
+            return decoded.Data.ProductList;
         }
 
         private string CleanProductResults(string productString)
         {
-            if (string.IsNullOrEmpty(productString)) throw new ArgumentException(productString);
+            if (string.IsNullOrEmpty(productString))
+            {
+                throw new ArgumentException(productString);
+            }
 
             var cleanedString = productString.Replace("\n", "").Replace("\t", "").Replace(@"\""", @"""");
             return cleanedString;

@@ -52,15 +52,22 @@
   <ItemGroup>
     <Compile Include="Categories.cs" />
     <Compile Include="City.cs" />
+    <Compile Include="Helpers\DateTimeParser.cs" />
     <Compile Include="Helpers\PriceParser.cs" />
     <Compile Include="Model\Article.cs" />
+    <Compile Include="Model\JsonDeserialization\Badge.cs" />
+    <Compile Include="Model\JsonDeserialization\Country.cs" />
+    <Compile Include="Model\JsonDeserialization\Data.cs" />
     <Compile Include="Model\JsonDeserialization\OrderSnippets.cs" />
     <Compile Include="Model\JsonDeserialization\OrdersResponse.cs" />
     <Compile Include="Model\JsonDeserialization\ProductResponse.cs" />
     <Compile Include="Model\JsonDeserialization\ProductSnippets.cs" />
     <Compile Include="Model\Order.cs" />
     <Compile Include="Model\Product.cs" />
+    <Compile Include="Model\JsonDeserialization\RohlikProduct.cs" />
     <Compile Include="Model\RohlikovacResult.cs" />
+    <Compile Include="Model\JsonDeserialization\Sale.cs" />
+    <Compile Include="Model\JsonDeserialization\Stars.cs" />
     <Compile Include="OrderHistory.cs" />
     <Compile Include="PersistentSessionHttpClient.cs" />
     <Compile Include="ProductComparer.cs" />
@@ -68,12 +75,15 @@
     <Compile Include="RohlikApi.cs" />
     <Compile Include="AuthenticatedRohlikApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RohlikApiException.cs" />
     <Compile Include="Rohlikovac.cs" />
+    <Compile Include="Model\JsonDeserialization\ProductResponseJson.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
