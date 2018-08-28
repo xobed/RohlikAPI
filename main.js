@@ -1,118 +1,53 @@
-﻿var app = new Vue({
-    el: "#app",
-    data: {
-        apiurl: 'https://rohlikapi.azurewebsites.net/api/GetAllProducts',
-        showLoader: true,
-        searchString: "",
-        products: [],
-        time: null,
-        regex: false
-    },
+﻿function formatDate(dateString) {
+    var date = new Date(dateString);
+    var month = parseInt(date.getMonth()) + 1;
+    return date.getDate() + "." + month + "." + date.getFullYear() + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2);
+};
 
-    computed: {
-        filteredProducts: function () {
-            var productArray = this.products;
-            var searchString = this.searchString;
+$(document).ready(function () {
+    var apiurl = 'https://rohlikapi.azurewebsites.net/api/GetAllProducts';
+    $.get(apiurl, function (data) {
+        var syncTime = data.SyncTime;
+        var products = data.Products;
+        var dataSet = [];
+        products.forEach(function (item) {
+            item.Size = (item.Price / item.PPU).toFixed(2);
+            dataSet.push(
+                [item.Img, item.Name, item.Price, item.PPU, item.Size, item.Unit]
+            );
+        }, this);
 
-            if (!searchString) {
-                return productArray.slice(0, 100);
-            }
-
-            var parameters = { search: searchString }
-            var parametersString = $.param(parameters);
-            var newLocation = location.protocol + '//' + location.host + location.pathname + "?" + parametersString;
-            history.pushState(newLocation, "", newLocation);
-
-            searchString = searchString.trim().toLowerCase();
-
-            if (this.regex) {
-                return this.filterProductsRegex(productArray, searchString);
-            }
-            return this.filterProducts(productArray, searchString);
-        }
-    },
-
-    created: function () {
-        this.setUrlFromParam();
-        this.fetchData();
-    },
-
-    methods: {
-        formatDate: function (dateString) {
-            var date = new Date(dateString);
-            var month = parseInt(date.getMonth()) + 1;
-            return date.getDate() + "." + month + "." + date.getFullYear() + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2);
-        },
-
-        fetchData: function () {
-            var self = this;
-            $.get(self.apiurl, function (data) {
-                self.products = data.Products;
-                self.products.forEach(function(item) {
-                    item.Size = (item.Price / item.PPU).toFixed(2);
-                }, this);
-
-                self.time = self.formatDate(data.SyncTime);
-                self.showLoader = !self.showLoader;
-            });
-        },
-
-        setUrlFromParam: function () {
-            var searchParam = window.location.search.substring(1).split("=")[1];
-            if (searchParam) {
-                var decodedSearchParam = decodeURIComponent(searchParam);
-                this.searchString = decodedSearchParam;
-            };
-        },
-
-        filterProductsRegex: function (productArray, searchString) {
-            var regex = new RegExp(searchString);
-            return productArray.filter(function (item) {
-                if (regex.test(item.Sname)) {
-                    return item;
-                }
-            }).slice(0, 100);
-        },
-
-        filterProducts: function (productArray, searchString) {
-            var searchItems = searchString.split(" ");
-            var negativeItems = searchItems.filter(function (item) {
-                return item.charAt(0) == '-' && item.length > 1;
-            });
-
-            negativeItems = negativeItems.map(function (negativeItem) {
-                return negativeItem.substring(1);
-            });
-
-            var positiveItems = searchItems.filter(function (item) {
-                return item.charAt(0) != '-';
-            });
+        var time = formatDate(data.SyncTime);
 
 
-            function isValid(item) {
-                var negativeFound = false;
-                for (i = 0; i < negativeItems.length; i++) {
-                    if (item.Sname.indexOf(negativeItems[i]) !== -1) {
-                        negativeFound = true;
-                        break;
-                    };
-                }
-                if (negativeFound) {
-                    return false;
-                }
-                var count = 0;
-                positiveItems.forEach(function (searchWord) {
-                    if (item.Sname.indexOf(searchWord) !== -1) {
-                        count++;
+        $('#products').DataTable({
+            order: [[3, "asc"]],
+            data: dataSet,
+            columns: [
+                { title: "Image" },
+                { title: "Name" },
+                { title: "Price" },
+                { title: "Price per unit" },
+                { title: "Size" },
+                { title: "Unit" }
+            ],
+            columnDefs: [
+                { targets: 1, searchable: true },
+                { targets: '_all', searchable: false },
+                {
+                    targets: 0,
+                    searchable: false,
+                    data: "img",
+                    render: function (url, type, full) {
+                        return '<img class="lazy" data-original="' + full[0] + '"/>';
                     }
-                });
-                if (count == positiveItems.length) {
-                    return true;
-                };
+                }
+            ],
+            bLengthChange: false,
+            iDisplayLength: 100,
+            drawCallback: function () {
+                $("img.lazy").lazyload();
             }
-
-            return productArray.filter(isValid, negativeItems, positiveItems).slice(0, 100);
-        }
-    }
-}
-)
+        });
+    });
+});
