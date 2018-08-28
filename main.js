@@ -13,7 +13,7 @@ $(document).ready(function () {
         products.forEach(function (item) {
             item.Size = (item.Price / item.PPU).toFixed(2);
             dataSet.push(
-                [item.Img, item.Name, item.Price, item.PPU, item.Size, item.Unit]
+                [item.Img, item.Name, item.Price, item.PPU, item.Size, item.Unit, item.Href, item.Sname]
             );
         }, this);
 
@@ -29,17 +29,28 @@ $(document).ready(function () {
                 { title: "Price" },
                 { title: "Price per unit" },
                 { title: "Size" },
-                { title: "Unit" }
+                { title: "Unit" },
+                { title: "Link" },
+                { title: "Sname" },
             ],
             columnDefs: [
                 { targets: 1, searchable: true },
                 { targets: '_all', searchable: false },
+                { targets: [6, 7], visible: false },
                 {
-                    targets: 0,
+                    targets: 0,                    
+                    data: "img",
+                    sortable: false,
+                    render: function (url, type, full) {
+                        return '<img class="lazy" data-original="' + full[0] + '"/>';
+                    }
+                },
+                {
+                    targets: 1,
                     searchable: false,
                     data: "img",
                     render: function (url, type, full) {
-                        return '<img class="lazy" data-original="' + full[0] + '"/>';
+                        return '<a href=' +full[6]+ '>'+full[1] +'</a>';
                     }
                 }
             ],
