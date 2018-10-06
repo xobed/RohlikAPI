@@ -134,13 +134,18 @@ namespace RohlikAPI
             var priceNode = productNode.SelectSingleNode(".//div/strong[contains(@class,'font-15')]");
             product.Price = priceParser.ParsePrice(priceNode.InnerText);
 
-            var pricePerUnitNode = productNode.SelectSingleNode(".//span[@class='grey font-11']/text()");
+            var pricePerUnitNode = productNode.SelectSingleNode(".//div[contains(@class,'product__price')]//span/span/text()");
+            if (pricePerUnitNode == null)
+            {
+                pricePerUnitNode = productNode.SelectSingleNode(".//div[contains(@class,'product__price')]//span/text()");
+            }
+                
             var pricePerUnitString = pricePerUnitNode.InnerText.Trim().Trim('(', ')');
 
             product.PricePerUnit = priceParser.ParsePrice(pricePerUnitString);
             product.Unit = pricePerUnitString.Split(new[] {"&nbsp;"}, StringSplitOptions.None).Last();
 
-            var discountPriceNode = productNode.SelectSingleNode(".//span[@class='grey font-11']/del");
+            var discountPriceNode = productNode.SelectSingleNode(".//div[contains(@class,'product__price')]//del");
 
             if (discountPriceNode != null)
             {
