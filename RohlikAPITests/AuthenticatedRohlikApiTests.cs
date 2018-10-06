@@ -48,7 +48,6 @@ namespace RohlikAPITests
         private void CheckOrderHistoryItem(Order order, DateTime timeSince)
         {
             Assert.IsTrue(order.Id > 0);
-            Assert.IsTrue(order.Price > 0);
             Assert.IsNotNull(order.Date);
             Assert.IsTrue(!string.IsNullOrEmpty(order.PaymentMethod));
             Assert.IsTrue(order.Date >= timeSince);
