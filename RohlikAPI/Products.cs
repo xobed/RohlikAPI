@@ -76,7 +76,7 @@ namespace RohlikAPI
                 PricePerUnit = rohlikProduct.PricePerUnit,
                 ProductUrl = $"{BaseUrl}{rohlikProduct.BaseLink}",
                 IsSoldOut = rohlikProduct.InStock == false,
-                ImageUrl = rohlikProduct.ImgPath.Replace("260.jpg", "160.jpg"),
+                ImageUrl = rohlikProduct.ImgPath?.Replace("260.jpg", "160.jpg"),
                 Unit = rohlikProduct.Unit
             };
             var nonExpirationSales = rohlikProduct.Sales.FirstOrDefault(s => s.Type == SaleType.Sale);
