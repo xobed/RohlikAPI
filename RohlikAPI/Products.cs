@@ -52,8 +52,8 @@ namespace RohlikAPI
 
         internal IEnumerable<Product> Search(string searchString)
         {
-            var allProductsString = GetAllProductsString(searchString, BaseSearchUrl);
-            return GetProductsFromHtmlString(allProductsString);
+            var rohlikProducts = SearchProductsViaFrontendService(searchString, BaseUrl);
+            return GetProductsFromRohlikProducts(rohlikProducts).ToList();
         }
 
         private IEnumerable<Product> GetProductsFromHtmlString(string htmlString)
@@ -273,6 +273,15 @@ namespace RohlikAPI
         private List<RohlikProduct> GetProductsForCategoryViaFrontendService(long categoryId, string baseUrl)
         {
             var url = $"{baseUrl}services/frontend-service/products/{categoryId}?offset=0&limit=100000";
+            var response = httpClient.Get(url);
+
+            var decoded = JsonConvert.DeserializeObject<ProductResponseJson>(response);
+            return decoded.Data.ProductList;
+        }
+
+        private List<RohlikProduct> SearchProductsViaFrontendService(string query, string baseUrl)
+        {
+            var url = $"https://www.rohlik.cz/services/frontend-service/search/{query}?&offset=0&limit=100000";
             var response = httpClient.Get(url);
 
             var decoded = JsonConvert.DeserializeObject<ProductResponseJson>(response);
