@@ -37,6 +37,7 @@ namespace RohlikAPI.Model.JsonDeserialization
     {
         Sale,
         Expiration,
-        Multipack
+        Multipack,
+        Premium
     }
 }
