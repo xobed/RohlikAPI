@@ -90,7 +90,7 @@ namespace RohlikAPITests
         [TestMethod]
         public void GetMainCategory()
         {
-            const string testCategory = "c300101000-pekarna-a-cukrarna";
+            const string testCategory = "c300106000-trvanlive";
 
             var api = new RohlikApi(City.Brno);
             var result = api.GetProducts(testCategory).ToList();
