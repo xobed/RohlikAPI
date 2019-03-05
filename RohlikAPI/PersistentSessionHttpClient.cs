@@ -15,6 +15,7 @@ namespace RohlikAPI
             var cookieContainer = new CookieContainer();
             var handler = new HttpClientHandler {CookieContainer = cookieContainer};
             httpClient = new HttpClient(handler);
+            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36");
         }
 
         public string Get(string url)

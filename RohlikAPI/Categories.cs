@@ -23,6 +23,10 @@ namespace RohlikAPI
             rohlikFrontDocument.LoadHtml(rohlikFrontString);
 
             var categoryNodes = rohlikFrontDocument.DocumentNode.SelectNodes("//*[@class='Menu__sortimentItem']//a");
+            if (categoryNodes == null)
+            {
+                throw new Exception("Failed to find category nodes in rohlik main page");
+            }
             var categoryHrefs = categoryNodes.Select(c => c.Attributes["href"].Value);
             foreach (var categoryHref in categoryHrefs)
             {
