@@ -55,8 +55,6 @@
     <Compile Include="Helpers\DateTimeParser.cs" />
     <Compile Include="Helpers\PriceParser.cs" />
     <Compile Include="Model\Article.cs" />
-    <Compile Include="Model\JsonDeserialization\Badge.cs" />
-    <Compile Include="Model\JsonDeserialization\Country.cs" />
     <Compile Include="Model\JsonDeserialization\Data.cs" />
     <Compile Include="Model\JsonDeserialization\OrderSnippets.cs" />
     <Compile Include="Model\JsonDeserialization\OrdersResponse.cs" />
@@ -66,8 +64,6 @@
     <Compile Include="Model\Product.cs" />
     <Compile Include="Model\JsonDeserialization\RohlikProduct.cs" />
     <Compile Include="Model\RohlikovacResult.cs" />
-    <Compile Include="Model\JsonDeserialization\Sale.cs" />
-    <Compile Include="Model\JsonDeserialization\Stars.cs" />
     <Compile Include="OrderHistory.cs" />
     <Compile Include="PersistentSessionHttpClient.cs" />
     <Compile Include="ProductComparer.cs" />
