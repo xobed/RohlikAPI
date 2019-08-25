@@ -107,31 +107,6 @@ namespace RohlikAPITests
         }
 
         [TestMethod]
-        public void GetCenoveTrhaky()
-        {
-            var api = new RohlikApi(City.Brno);
-            var result = api.GetCenoveTrhaky().ToList();
-
-            var discountedResults = result.Where(p => p.IsDiscounted);
-            var nondiscountedResults = result.Where(p => !p.IsDiscounted);
-
-            // 'Cenove Trhaky' sometimes contain products which are not discounted - Error or 'by design' on Rohlik.cz side
-            // There should not be too many of those though. Allowed error level is 5%
-            double percentageOfNonDiscounted = nondiscountedResults.Count() / (double) result.Count * 100;
-            Assert.IsTrue(percentageOfNonDiscounted < 5);
-
-            VerifyDiscountedProducts(discountedResults.ToList());
-        }
-
-        [TestMethod]
-        public void GetLastMinute()
-        {
-            var api = new RohlikApi(City.Brno);
-            var result = api.GetLastMinute().ToList();
-            VerifyLastMinuteProducts(result);
-        }
-
-        [TestMethod]
         public void SearchProductsTest()
         {
             var api = new RohlikApi(City.Brno);

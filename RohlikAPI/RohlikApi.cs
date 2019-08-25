@@ -72,27 +72,7 @@ namespace RohlikAPI
         }
 
         /// <summary>
-        ///     Get all products on https://www.rohlik.cz/last-minute
-        /// </summary>
-        /// <returns>Collection of all 'Last minute' products</returns>
-        public IEnumerable<Product> GetLastMinute()
-        {
-            const string lastMinuteCategory = "last-minute";
-            return GetProducts(lastMinuteCategory);
-        }
-
-        /// <summary>
-        ///     Gets all products on https://www.rohlik.cz/cenove-trhaky
-        /// </summary>
-        /// <returns>Collection of all 'Cenove trhaky' products</returns>
-        public IEnumerable<Product> GetCenoveTrhaky()
-        {
-            const string cenoveTrhakyCategory = "cenove-trhaky";
-            return GetProducts(cenoveTrhakyCategory);
-        }
-
-        /// <summary>
-        ///     Get URLs for all categories visible on main Rohli.cz page
+        ///     Get URLs for all categories visible on main Rohlik.cz page
         /// </summary>
         /// <returns>List of category URL strings</returns>
         public IEnumerable<string> GetCategories()
