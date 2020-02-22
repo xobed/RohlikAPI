@@ -22,7 +22,7 @@ namespace RohlikAPI
             var rohlikFrontDocument = new HtmlDocument();
             rohlikFrontDocument.LoadHtml(rohlikFrontString);
 
-            var categoryNodes = rohlikFrontDocument.DocumentNode.SelectNodes("//*[@class='Menu__sortimentItem']//a");
+            var categoryNodes = rohlikFrontDocument.DocumentNode.SelectNodes("//li[@class='sortimentItem']//a");
             if (categoryNodes == null)
             {
                 throw new Exception("Failed to find category nodes in rohlik main page");
