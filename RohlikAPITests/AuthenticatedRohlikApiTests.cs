@@ -20,7 +20,7 @@ namespace RohlikAPITests
             }
             catch (WebException ex)
             {
-                Assert.IsTrue(ex.Message.Contains("Failed to login to Rohlik"),
+                Assert.IsTrue(ex.Message.Contains("Failed to login"),
                     $"Unexpected exception message: {ex.Message}");
                 return;
             }

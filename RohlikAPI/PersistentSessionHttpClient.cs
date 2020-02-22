@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Web;
+using Newtonsoft.Json;
 
 namespace RohlikAPI
 {
@@ -15,7 +17,8 @@ namespace RohlikAPI
             var cookieContainer = new CookieContainer();
             var handler = new HttpClientHandler {CookieContainer = cookieContainer};
             httpClient = new HttpClient(handler);
-            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36");
+            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd(
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36");
         }
 
         public string Get(string url)
@@ -43,7 +46,7 @@ namespace RohlikAPI
                 query[parameter.Key] = parameter.Value;
             }
 
-            string urlWithParameters = $"{requestMessage.RequestUri}?{query}";
+            var urlWithParameters = $"{requestMessage.RequestUri}?{query}";
             requestMessage.RequestUri = new Uri(urlWithParameters);
             return Get(requestMessage);
         }
@@ -51,6 +54,14 @@ namespace RohlikAPI
         public HttpResponseMessage Post(string url, IEnumerable<KeyValuePair<string, string>> parameters)
         {
             HttpContent content = new FormUrlEncodedContent(parameters);
+            var response = httpClient.PostAsync(url, content).Result;
+            return response;
+        }
+
+        public HttpResponseMessage PostJson(string url, object data)
+        {
+            var serialized = JsonConvert.SerializeObject(data);
+            HttpContent content = new StringContent(serialized, Encoding.UTF8, "application/json");
             var response = httpClient.PostAsync(url, content).Result;
             return response;
         }
