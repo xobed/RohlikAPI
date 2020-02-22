@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using Newtonsoft.Json;
 using RohlikAPI.Model;
+using RohlikAPI.Model.JsonDeserialization;
 
 namespace RohlikAPI
 {
@@ -14,23 +17,20 @@ namespace RohlikAPI
 
         protected PersistentSessionHttpClient CreateAuthenticatedHttpClient(string username, string password)
         {
-            var loginPostForm = new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string, string>("do", "loginForm-submit"),
-                new KeyValuePair<string, string>("email", username),
-                new KeyValuePair<string, string>("password", password)
-            };
-
-            const string rohlikLoginUrl = "https://www.rohlik.cz/uzivatel/prihlaseni";
+            const string rohlikLoginUrl = "https://www.rohlik.cz/services/frontend-service/login";
 
             var httpSessionClient = new PersistentSessionHttpClient();
 
-            var response = httpSessionClient.Post(rohlikLoginUrl, loginPostForm);
+            var response = httpSessionClient.PostJson(rohlikLoginUrl, new Login {Email = username, Password = password});
             var responseContent = response.Content.ReadAsStringAsync().Result;
-            if (responseContent.Contains("Zadal(a) jste nesprávný e-mail nebo heslo"))
+            var deserialized = JsonConvert.DeserializeObject<LoginResponse>(responseContent);
+
+            if (deserialized.Status != 200)
             {
-                throw new WebException($"Failed to login to Rohlik. Used email: {username}");
+                var messagesString = string.Join("\n", deserialized.Messages.Select(m => m.Content));
+                throw new WebException($"Failed to login: {messagesString}");
             }
+
             return httpSessionClient;
         }
 

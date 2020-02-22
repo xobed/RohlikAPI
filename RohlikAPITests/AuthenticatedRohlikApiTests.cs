@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Net;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -21,21 +20,25 @@ namespace RohlikAPITests
             }
             catch (WebException ex)
             {
-                Assert.IsTrue(ex.Message.Contains("Failed to login to Rohlik"), $"Unexpected exception message: {ex.Message}");
+                Assert.IsTrue(ex.Message.Contains("Failed to login"),
+                    $"Unexpected exception message: {ex.Message}");
                 return;
             }
+
             Assert.Fail("Login with fake credentials did not throw an exception");
         }
 
         private string[] GetCredentials()
         {
-            var filePath = @"..\..\..\loginPassword.txt";
-            if (!File.Exists(filePath))
+            var credentialsString = Environment.GetEnvironmentVariable("TEST_CREDENTIALS");
+
+            if (credentialsString == null)
             {
-                throw new FileNotFoundException("Test needs credentials. Create 'loginPassword.txt' in solution root directory. Enter username@email.com:yourPassword on first line.");
+                throw new ArgumentException(
+                    "Test needs credentials. Set environment variable 'TEST_CREDENTIALS=username@email.com:yourPassword'");
             }
-            var passwordString = File.ReadAllText(filePath);
-            return passwordString.Split(':');
+
+            return credentialsString.Split(':');
         }
 
         private void CheckArticle(Article article)
