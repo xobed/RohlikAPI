@@ -1,10 +1,10 @@
 Web scraping API for www.rohlik.cz
 
-Quick Rohlik.cz product search using the API available at:  
-https://xobed.github.io/RohlikAPI/
-
 Available on Nuget:
 https://www.nuget.org/packages/RohlikAPI/
+
+Demo web which is using the API:  
+https://rohlikapi.xobed.cz
 
 Example without authentication:
 ```C#
