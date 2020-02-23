@@ -17,4 +17,8 @@
     <ProjectReference Include="..\RohlikAPI\RohlikAPI.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+  </ItemGroup>
+
 </Project>
