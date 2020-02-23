@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Net;
+using Newtonsoft.Json;
 using RohlikAPI.Model;
+using RohlikAPI.Model.JsonDeserialization;
 
 namespace RohlikAPI
 {
@@ -25,25 +27,26 @@ namespace RohlikAPI
             HttpSessionClient = CreateHttpClient(street, city);
         }
 
-        protected PersistentSessionHttpClient CreateHttpClient(string street, string city)
+        private PersistentSessionHttpClient CreateHttpClient(string street, string city)
         {
-            var setAddressForm = new List<KeyValuePair<string, string>>
+            var request = new SetAddressRequest
             {
-                new KeyValuePair<string, string>("do", "addressPopup-form-submit"),
-                new KeyValuePair<string, string>("street", street),
-                new KeyValuePair<string, string>("city", city)
+                StreetWithNumber = street,
+                City = city,
+                IsGeocodeResult = false
             };
 
-            var setCityUrl = "https://www.rohlik.cz/";
+            var homeUrl = "https://www.rohlik.cz/";
+            var setCityUrl = "https://www.rohlik.cz/services/frontend-service/delivery-address/check";
 
             var httpSessionClient = new PersistentSessionHttpClient();
+            httpSessionClient.Get(homeUrl);
+            var responseString = httpSessionClient.PostJson(setCityUrl, request);
+            var response = JsonConvert.DeserializeObject<SetAddressResponse>(responseString.Content.ReadAsStringAsync().Result);
 
-            var response = httpSessionClient.Post(setCityUrl, setAddressForm);
-            var responseContent = response.Content.ReadAsStringAsync().Result;
-            // This is set to non-null if posting address is successful and address is valid for deliveries
-            if (responseContent.Contains("\"addressCity\":null"))
+            if (response.Data.Address.City.ToLower() != city.ToLower())
             {
-                throw new WebException($"Failed to set address '{street} - {city}' for Rohlik client");
+                throw new Exception("Failed to set address / city.");
             }
 
             return httpSessionClient;

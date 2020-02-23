@@ -15,7 +15,7 @@ namespace RohlikAPI
             HttpSessionClient = CreateAuthenticatedHttpClient(username, password);
         }
 
-        protected PersistentSessionHttpClient CreateAuthenticatedHttpClient(string username, string password)
+        private PersistentSessionHttpClient CreateAuthenticatedHttpClient(string username, string password)
         {
             const string rohlikLoginUrl = "https://www.rohlik.cz/services/frontend-service/login";
 
