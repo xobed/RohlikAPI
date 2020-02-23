@@ -35,15 +35,12 @@ namespace RohlikAPI
 
         public RohlikovacResult RunRohlikovac()
         {
-            var rohlikovac = new Rohlikovac(HttpClient);
-            return rohlikovac.Run();
+            return HttpClient.Get<RohlikovacResult>("https://www.rohlik.cz/services/frontend-service/credit-forge-roll");
         }
 
         public IEnumerable<Order> GetOrderHistory()
         {
-            var orderHistory = new OrderHistory(HttpClient);
-            var response = orderHistory.GetOrders();
-
+            var response = HttpClient.Get<OrdersResponse>("https://www.rohlik.cz/services/frontend-service/v2/user-profile/orders?limit=999999");
             return response.Data.Orders;
         }
     }

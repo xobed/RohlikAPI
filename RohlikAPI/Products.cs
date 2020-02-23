@@ -80,19 +80,15 @@ namespace RohlikAPI
         private List<RohlikProduct> GetProductsForCategoryViaFrontendService(long categoryId)
         {
             var url = $"{BaseUrl}services/frontend-service/products/{categoryId}?offset=0&limit=100000";
-            var response = httpClient.Get(url);
-
-            var decoded = JsonConvert.DeserializeObject<ProductResponseJson>(response);
-            return decoded.Data.ProductList;
+            var response = httpClient.Get<ProductResponseJson>(url);
+            return response.Data.ProductList;
         }
 
         private List<RohlikProduct> SearchProductsViaFrontendService(string query)
         {
             var url = $"{BaseUrl}services/frontend-service/search/{query}?&offset=0&limit=100000";
-            var response = httpClient.Get(url);
-
-            var decoded = JsonConvert.DeserializeObject<ProductResponseJson>(response);
-            return decoded.Data.ProductList;
+            var response = httpClient.Get<ProductResponseJson>(url);
+            return response.Data.ProductList;
         }
     }
 }

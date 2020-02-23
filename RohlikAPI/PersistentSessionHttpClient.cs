@@ -25,6 +25,12 @@ namespace RohlikAPI
         {
             var response = httpClient.GetStringAsync(url).Result;
             return response;
+        }    
+
+        public T Get<T>(string url)
+        {
+            var response = httpClient.GetStringAsync(url).Result;
+            return JsonConvert.DeserializeObject<T>(response);
         }
 
         public string Get(HttpRequestMessage requestMessage)
