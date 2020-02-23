@@ -89,8 +89,7 @@ namespace RohlikAPITests
             var rohlikApi = new AuthenticatedRohlikApi(login[0], login[1]);
             var result = rohlikApi.RunRohlikovac();
 
-            Assert.IsNotNull(result.TimeBaked);
-            Assert.IsTrue(result.Message.Contains("Rohlíkovač"));
+            Assert.Equals(result.Status, 200);
         }
     }
 }
