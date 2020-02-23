@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RohlikAPI;
 using RohlikAPI.Model;
@@ -114,6 +115,22 @@ namespace RohlikAPITests
             var api = new RohlikApi(City.Brno);
             var allProducts = api.GetAllProducts().ToList();
             VerifyNonDiscountedProducts(allProducts);
+        }
+
+        [TestMethod]
+        public void TestImageLinkIsValid()
+        {
+            var api = new RohlikApi(City.Brno);
+            var category = api.GetCategories().First();
+            var anyProduct = api.GetProducts(category).First();
+            var imageUrl = anyProduct.ImageUrl;
+            Assert.IsTrue(imageUrl.Length > 0);
+            var client = new HttpClient();
+
+            var response = client.GetAsync(imageUrl).Result;
+
+            Assert.IsTrue(response.IsSuccessStatusCode);
+            Assert.IsTrue(response.Content.Headers.ContentType.ToString().Contains("image/"));
         }
     }
 }
