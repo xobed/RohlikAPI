@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Text;
 
-namespace RohlikAPIWeb.Models
+namespace RohlikAPIWeb.Model
 {
     public class ApiProduct
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RohlikAPIWeb.Models
+namespace RohlikAPIWeb.Model
 {
     public class ApiResponse
     {

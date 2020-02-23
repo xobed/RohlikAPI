@@ -47,12 +47,12 @@
         fetchData: function () {
             var self = this;
             $.get(self.apiurl, function (data) {
-                self.products = data.Products;
+                self.products = data.products;
                 self.products.forEach(function(item) {
-                    item.Size = (item.Price / item.PPU).toFixed(2);
+                    item.size = (item.price / item.ppu).toFixed(2);
                 }, this);
 
-                self.time = self.formatDate(data.SyncTime);
+                self.time = self.formatDate(data.syncTime);
                 self.showLoader = !self.showLoader;
             });
         },
@@ -68,7 +68,7 @@
         filterProductsRegex: function (productArray, searchString) {
             var regex = new RegExp(searchString);
             return productArray.filter(function (item) {
-                if (regex.test(item.Sname)) {
+                if (regex.test(item.sname)) {
                     return item;
                 }
             }).slice(0, 100);
@@ -92,7 +92,7 @@
             function isValid(item) {
                 var negativeFound = false;
                 for (i = 0; i < negativeItems.length; i++) {
-                    if (item.Sname.indexOf(negativeItems[i]) !== -1) {
+                    if (item.sname.indexOf(negativeItems[i]) !== -1) {
                         negativeFound = true;
                         break;
                     };
@@ -102,7 +102,7 @@
                 }
                 var count = 0;
                 positiveItems.forEach(function (searchWord) {
-                    if (item.Sname.indexOf(searchWord) !== -1) {
+                    if (item.sname.indexOf(searchWord) !== -1) {
                         count++;
                     }
                 });

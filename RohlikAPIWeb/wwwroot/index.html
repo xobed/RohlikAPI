@@ -49,15 +49,15 @@
                 <tbody>
                     <tr v-for="product in filteredProducts">
                         <td class="imagetd">
-                            <img v-bind:src="product.Img">
+                            <img v-bind:src="product.img">
                         </td>
                         <td>
-                            <a v-bind:href="product.Href">{{product.Name}}</a>
+                            <a v-bind:href="product.href">{{product.name}}</a>
                         </td>
-                        <td>{{product.Price}}</td>
-                        <td>{{product.PPU}}</td>
-                        <td>{{product.Size}}</td>
-                        <td>{{product.Unit}}</td>
+                        <td>{{product.price}}</td>
+                        <td>{{product.ppu}}</td>
+                        <td>{{product.size}}</td>
+                        <td>{{product.unit}}</td>
                     </tr>
                 </tbody>
             </table>

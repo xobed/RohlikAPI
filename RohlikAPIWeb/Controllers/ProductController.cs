@@ -1,18 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using RohlikAPIWeb.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using RohlikAPIWeb.Model;
 
 namespace RohlikAPIWeb.Controllers
 {
     [ApiController]
     public class ProductController : ControllerBase
     {
+        private readonly RedisStorage storage;
+
+        public ProductController(RedisStorage storage)
+        {
+            this.storage = storage;
+        }
+
         [HttpGet]
         [Route("/api/GetAllProducts")]
         public ApiResponse Get()
         {
-            return new ApiResponse(DateTime.UtcNow, new List<ApiProduct>());
+            return storage.Get();
         }
     }
 }
