@@ -17,6 +17,7 @@ namespace RohlikAPITests
             Assert.IsNotNull(new RohlikApi(City.Praha));
         }
 
+        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         private void VerifyProduct(Product product, bool isDiscounted)
         {
             Assert.IsNotNull(product.Name, "Product name was null");
@@ -36,26 +37,6 @@ namespace RohlikAPITests
                 Assert.IsNull(product.DiscountedUntil, $"NonDiscounted product {product.Name} has 'discounted until' {product.DiscountedUntil}. Expected null");
                 Assert.IsNull(product.OriginalPrice);
             }
-        }
-
-        private void VerifyDiscountedProducts(List<Product> products)
-        {
-            Assert.IsTrue(products.Any(), "Failed to get any products");
-
-            // At least some products have discounted until
-            Assert.IsTrue(products.Any(p => p.DiscountedUntil != null), "No products with discount expiration found");
-            Assert.IsTrue(products.All(p => p.IsDiscounted), $"Found some products without discount: {string.Join(",", products.Where(p => !p.IsDiscounted).Select(p => p.Name).ToList())}");
-            products.ForEach(p => VerifyProduct(p, true));
-        }
-
-        private void VerifyLastMinuteProducts(List<Product> products)
-        {
-            Assert.IsTrue(products.Any(), "Failed to get any products");
-
-            // Last minute products do not have 'discounted until'
-            Assert.IsTrue(products.All(p => p.DiscountedUntil == null));
-            Assert.IsTrue(products.All(p => p.IsDiscounted), $"Found some products without discount: {string.Join(",", products.Where(p => !p.IsDiscounted).Select(p => p.Name).ToList())}");
-            products.ForEach(p => VerifyProduct(p, true));
         }
 
         private void VerifyProductsAllowErrorMargin(List<Product> products, bool discounted)
