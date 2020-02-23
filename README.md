@@ -1,5 +1,3 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/e46x2aurw79ybur7?svg=true)](https://ci.appveyor.com/project/xobed/rohlikapi-1sk01)
-
 Web scraping API for www.rohlik.cz
 
 Quick Rohlik.cz product search using the API available at:  
