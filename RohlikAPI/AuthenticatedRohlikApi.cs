@@ -14,11 +14,11 @@ namespace RohlikAPI
             HttpSessionClient = CreateAuthenticatedHttpClient(username, password);
         }
 
-        private PersistentSessionHttpClient CreateAuthenticatedHttpClient(string username, string password)
+        private RohlikHttpClient CreateAuthenticatedHttpClient(string username, string password)
         {
             const string rohlikLoginUrl = "https://www.rohlik.cz/services/frontend-service/login";
 
-            var httpSessionClient = new PersistentSessionHttpClient();
+            var httpSessionClient = new RohlikHttpClient();
 
             var response = httpSessionClient.PostJson(rohlikLoginUrl, new Login {Email = username, Password = password});
             var responseContent = response.Content.ReadAsStringAsync().Result;

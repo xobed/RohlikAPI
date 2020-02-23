@@ -9,9 +9,9 @@ namespace RohlikAPI
 {
     public class RohlikApi
     {
-        protected PersistentSessionHttpClient HttpSessionClient;
+        protected RohlikHttpClient HttpSessionClient;
 
-        protected virtual PersistentSessionHttpClient HttpClient => HttpSessionClient;
+        protected virtual RohlikHttpClient HttpClient => HttpSessionClient;
 
         internal RohlikApi()
         {
@@ -27,7 +27,7 @@ namespace RohlikAPI
             HttpSessionClient = CreateHttpClient(street, city);
         }
 
-        private PersistentSessionHttpClient CreateHttpClient(string street, string city)
+        private RohlikHttpClient CreateHttpClient(string street, string city)
         {
             var request = new SetAddressRequest
             {
@@ -39,7 +39,7 @@ namespace RohlikAPI
             var homeUrl = "https://www.rohlik.cz/";
             var setCityUrl = "https://www.rohlik.cz/services/frontend-service/delivery-address/check";
 
-            var httpSessionClient = new PersistentSessionHttpClient();
+            var httpSessionClient = new RohlikHttpClient();
             httpSessionClient.Get(homeUrl);
             var responseString = httpSessionClient.PostJson(setCityUrl, request);
             var response = JsonConvert.DeserializeObject<SetAddressResponse>(responseString.Content.ReadAsStringAsync().Result);

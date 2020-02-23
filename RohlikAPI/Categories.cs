@@ -7,9 +7,9 @@ namespace RohlikAPI
 {
     internal class Categories
     {
-        private readonly PersistentSessionHttpClient httpClient;
+        private readonly RohlikHttpClient httpClient;
 
-        internal Categories(PersistentSessionHttpClient httpClient)
+        internal Categories(RohlikHttpClient httpClient)
         {
             this.httpClient = httpClient;
         }

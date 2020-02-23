@@ -9,13 +9,12 @@ namespace RohlikAPI
     internal class Products
     {
         private const string BaseUrl = "https://www.rohlik.cz/";
-        private readonly PersistentSessionHttpClient httpClient;
+        private readonly RohlikHttpClient httpClient;
 
-        internal Products(PersistentSessionHttpClient httpClient)
+        internal Products(RohlikHttpClient httpClient)
         {
             this.httpClient = httpClient;
         }
-
 
         internal IEnumerable<Product> Get(string category)
         {

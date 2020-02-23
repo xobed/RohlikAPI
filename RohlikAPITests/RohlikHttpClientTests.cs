@@ -4,7 +4,7 @@ using RohlikAPI;
 namespace RohlikAPITests
 {
     [TestClass]
-    public class PersistentSessionHttpClientTests
+    public class RohlikHttpClientTests
     {
         [TestMethod]
         public void HTTPGet_PersistsCookies()
@@ -12,7 +12,7 @@ namespace RohlikAPITests
             const string testCookieName = "testCookieName";
             const string testCookieValue = "testCookieValue";
 
-            var client = new PersistentSessionHttpClient();
+            var client = new RohlikHttpClient();
 
             client.Get($"http://httpbin.org/cookies/set/{testCookieName}/{testCookieValue}");
             var response = client.Get("http://httpbin.org/cookies");
