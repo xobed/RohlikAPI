@@ -3,7 +3,59 @@ using Newtonsoft.Json;
 
 namespace RohlikAPI.Model.JsonDeserialization
 {
-    public class RohlikProduct
+    public class SearchResponse
+    {
+        [JsonProperty("status")]
+        public long Status { get; set; }
+
+        [JsonProperty("messages")]
+        public List<object> Messages { get; set; }
+
+        [JsonProperty("data")]
+        public Data Data { get; set; }
+    }
+
+
+    public class Category
+    {
+        [JsonProperty("id")]
+        public long Id { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("topParentName")]
+        public string TopParentName { get; set; }
+
+        [JsonProperty("link")]
+        public string Link { get; set; }
+
+        [JsonProperty("nameLong")]
+        public string NameLong { get; set; }
+
+        [JsonProperty("images")]
+        public List<string> Images { get; set; }
+    }
+
+    public class Company
+    {
+        [JsonProperty("id")]
+        public long Id { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("label")]
+        public string Label { get; set; }
+
+        [JsonProperty("url")]
+        public string Url { get; set; }
+
+        [JsonProperty("totalHits")]
+        public long TotalHits { get; set; }
+    }
+
+    public class ProductList
     {
         [JsonProperty("productId")]
         public long ProductId { get; set; }
@@ -45,13 +97,13 @@ namespace RohlikAPI.Model.JsonDeserialization
         public string Currency { get; set; }
 
         [JsonProperty("price")]
-        public Price Price { get; set; }
+        public OriginalPrice Price { get; set; }
 
         [JsonProperty("pricePerUnit")]
-        public Price PricePerUnit { get; set; }
+        public OriginalPrice PricePerUnit { get; set; }
 
         [JsonProperty("recommendedPricePerUnit")]
-        public Price RecommendedPricePerUnit { get; set; }
+        public OriginalPrice RecommendedPricePerUnit { get; set; }
 
         [JsonProperty("originalPrice")]
         public OriginalPrice OriginalPrice { get; set; }
@@ -63,7 +115,7 @@ namespace RohlikAPI.Model.JsonDeserialization
         public long GoodPriceSalePercentage { get; set; }
 
         [JsonProperty("sales")]
-        public List<Sale> Sales { get; set; }
+        public List<object> Sales { get; set; }
 
         [JsonProperty("maxBasketAmount")]
         public long MaxBasketAmount { get; set; }
@@ -75,7 +127,7 @@ namespace RohlikAPI.Model.JsonDeserialization
         public List<string> Tags { get; set; }
 
         [JsonProperty("badge")]
-        public List<Badge> Badge { get; set; }
+        public List<object> Badge { get; set; }
 
         [JsonProperty("stars")]
         public object Stars { get; set; }
@@ -105,7 +157,7 @@ namespace RohlikAPI.Model.JsonDeserialization
         public long CompanyId { get; set; }
 
         [JsonProperty("productStory")]
-        public ProductStory ProductStory { get; set; }
+        public object ProductStory { get; set; }
 
         [JsonProperty("vivino")]
         public object Vivino { get; set; }

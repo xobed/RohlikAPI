@@ -21,7 +21,7 @@ namespace RohlikAPI
             var categoryId = GetCategoryId(category);
             if (categoryId > 0)
             {
-                var rohlikProducts = GetProductsForCategoryViaFrontendService(categoryId);
+                var rohlikProducts = GetProductsForCategory(categoryId);
                 var products = GetProductsFromRohlikProducts(rohlikProducts).ToList();
                 if (products.Count == 0)
                     throw new RohlikApiException($"Failed to find any products for category {category}");
@@ -34,7 +34,7 @@ namespace RohlikAPI
 
         internal IEnumerable<Product> Search(string searchString)
         {
-            var rohlikProducts = SearchProductsViaFrontendService(searchString);
+            var rohlikProducts = SearchProducts(searchString);
             return GetProductsFromRohlikProducts(rohlikProducts).ToList();
         }
 
@@ -76,17 +76,33 @@ namespace RohlikAPI
             return categoryId;
         }
 
-        private List<RohlikProduct> GetProductsForCategoryViaFrontendService(long categoryId)
+        private List<RohlikProduct> GetProductsFromCategoriesResponse(CategoriesResponse response)
         {
-            var url = $"{BaseUrl}services/frontend-service/products/{categoryId}?offset=0&limit=100000";
-            var response = httpClient.Get<ProductResponseJson>(url);
-            return response.Data.ProductList;
+            var blocks = response.Data.Blocks;
+            var products = new List<RohlikProduct>();
+
+            foreach (var block in blocks)
+            {
+                if (block.Type == "products-list")
+                {
+                    products.AddRange(JsonConvert.DeserializeObject<List<RohlikProduct>>(block.Data.ToString()));
+                };
+            }
+
+            return products;
         }
 
-        private List<RohlikProduct> SearchProductsViaFrontendService(string query)
+        private List<RohlikProduct> GetProductsForCategory(long categoryId)
         {
-            var url = $"{BaseUrl}services/frontend-service/search/{query}?&offset=0&limit=100000";
-            var response = httpClient.Get<ProductResponseJson>(url);
+            var url = $"{BaseUrl}services/frontend-service/categories?data={{\"categoryId\":{categoryId},\"limit\":999999,\"offset\":0}}";
+            var response = httpClient.Get<CategoriesResponse>(url);
+            return GetProductsFromCategoriesResponse(response);
+        }
+
+        private List<RohlikProduct> SearchProducts(string query)
+        {
+            var url = $"{BaseUrl}services/frontend-service/search-metadata?search={query}&limit=999999";
+            var response = httpClient.Get<SearchResponse>(url);
             return response.Data.ProductList;
         }
     }
