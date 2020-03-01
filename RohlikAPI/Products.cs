@@ -81,12 +81,26 @@ namespace RohlikAPI
             var blocks = response.Data.Blocks;
             var products = new List<RohlikProduct>();
 
+            var jsonSerializerSettings = new JsonSerializerSettings
+            {
+                MissingMemberHandling = MissingMemberHandling.Ignore,
+                NullValueHandling = NullValueHandling.Ignore
+            };
+
             foreach (var block in blocks)
             {
-                if (block.Type == "products-list")
+                switch (block.Type)
                 {
-                    products.AddRange(JsonConvert.DeserializeObject<List<RohlikProduct>>(block.Data.ToString()));
-                };
+                    case "products-list":
+                        products.AddRange(JsonConvert.DeserializeObject<List<RohlikProduct>>(block.Data.ToString(), jsonSerializerSettings));
+                        break;
+                    case "products-section":
+                    {
+                        var deserializedSection = JsonConvert.DeserializeObject<ProductsSection>(block.Data.ToString(), jsonSerializerSettings);
+                        products.AddRange(deserializedSection.Products);
+                        break;
+                    }
+                }
             }
 
             return products;

@@ -230,4 +230,11 @@ namespace RohlikAPI.Model.JsonDeserialization
             }
         }
     }
+
+    class ProductsSection
+    {
+        [JsonProperty("products")]
+        public List<RohlikProduct> Products { get; set; }
+
+    }
 }
