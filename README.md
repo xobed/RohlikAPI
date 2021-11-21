@@ -1,3 +1,5 @@
+# NO LONGER MAINTAINED
+
 Web scraping API for www.rohlik.cz
 
 Available on Nuget:
